@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Open Secret — Merchandiser SOH</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#F5F4F0;--white:#fff;--border:rgba(0,0,0,0.1);
+  --text:#1A1A18;--text2:#6B6860;--text3:#9C9A94;
+  --accent:#1A3E8C;--accent2:#2D5BE3;
+  --green:#1A8A5A;--green-bg:#E8F5EE;
+  --red:#C4351A;--red-bg:#FDEEE8;
+  --r:12px;--r-sm:8px;
+}
+body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
+header{background:var(--accent);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
+.logo{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0;}
+header h1{font-size:15px;font-weight:600;}
+header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
+.prog-wrap{height:3px;background:rgba(255,255,255,0.2);position:sticky;top:62px;z-index:99;}
+.prog-bar{height:100%;background:#fff;border-radius:2px;transition:width 0.3s;}
+.wrap{max-width:500px;margin:0 auto;padding:16px 14px 110px;}
+.card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;}
+.card-hdr{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;background:#FAFAF8;}
+.card-hdr .icon{font-size:17px;}
+.card-hdr .title{font-size:13px;font-weight:600;}
+.card-hdr .sub{font-size:11px;color:var(--text2);margin-top:1px;}
+.card-body{padding:15px;}
+.field{margin-bottom:13px;}
+.field:last-child{margin-bottom:0;}
+.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em;}
+.req{color:var(--red);}
+.field input,.field select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:15px;color:var(--text);background:#fff;outline:none;transition:border-color 0.15s;-webkit-appearance:none;appearance:none;}
+.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
+.field input:focus,.field select:focus{border-color:var(--accent2);}
+.field input[readonly]{background:#F5F4F0;color:var(--text2);}
+.auto-tag{background:var(--green-bg);color:var(--green);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.sku-row{display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
+.sku-row:last-child{border-bottom:none;padding-bottom:0;}
+.sku-name{font-size:13px;font-weight:500;}
+.sku-num{font-family:"DM Mono",monospace;font-size:16px;padding:9px;border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;width:100%;outline:none;}
+.sku-num:focus{border-color:var(--accent2);}
+.yn-wrap{display:flex;gap:8px;}
+.yn-btn{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:500;cursor:pointer;background:#fff;color:var(--text2);transition:all 0.15s;font-family:"DM Sans",sans-serif;text-align:center;}
+.yn-btn.yes{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+.yn-btn.no{border-color:var(--red);background:var(--red-bg);color:var(--red);}
+.photo-area{border:1.5px dashed var(--border);border-radius:var(--r-sm);padding:20px;text-align:center;cursor:pointer;transition:all 0.15s;background:#FAFAF8;}
+.photo-area:hover{border-color:var(--accent2);}
+.photo-area.has-photo{border-color:var(--green);background:var(--green-bg);}
+.photo-area input{display:none;}
+.photo-area .ph-icon{font-size:28px;margin-bottom:6px;}
+.photo-area .ph-lbl{font-size:13px;font-weight:500;color:var(--text2);}
+.photo-area .ph-sub{font-size:11px;color:var(--text3);margin-top:3px;}
+#photoPreview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--r-sm);margin-top:10px;display:none;border:1px solid var(--border);}
+#photoName{font-size:12px;color:var(--green);margin-top:6px;display:none;font-family:"DM Mono",monospace;}
+.submit-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:14px 16px;z-index:100;}
+.submit-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
+.submit-btn:active{opacity:0.85;}
+.submit-btn:disabled{opacity:0.35;cursor:not-allowed;}
+.err{background:var(--red-bg);color:var(--red);border:1px solid rgba(196,53,26,0.2);border-radius:var(--r-sm);padding:11px 13px;font-size:13px;margin-bottom:14px;display:none;}
+.err.show{display:block;}
+#overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
+#overlay.show{display:flex;}
+.spin{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;}
+@keyframes sp{to{transform:rotate(360deg);}}
+#success{display:none;text-align:center;padding:60px 20px;}
+.ok-icon{font-size:60px;margin-bottom:16px;}
+.ok-title{font-size:21px;font-weight:600;margin-bottom:8px;}
+.ok-sub{color:var(--text2);font-size:13px;margin-bottom:28px;line-height:1.6;}
+.again-btn{padding:13px 30px;background:var(--accent);color:#fff;border-radius:var(--r-sm);font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">OS</div>
+  <div><h1>Open Secret</h1><p>Merchandiser SOH Form</p></div>
+</header>
+<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
+<div id="overlay"><div class="spin"></div><p style="font-size:13px;color:#666">Submitting...</p></div>
+
+<div class="wrap">
+  <div id="form">
+    <div class="err" id="err"></div>
+
+    <!-- VISIT -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">📋</div><div><div class="title">Visit Details</div><div class="sub">Auto-captures time & location</div></div></div>
+      <div class="card-body">
+        <div class="grid2">
+          <div class="field"><label>Date <span class="req">*</span></label><input type="date" id="vDate"></div>
+          <div class="field"><label>Time <span class="auto-tag">Auto</span></label><input type="time" id="vTime" readonly></div>
+        </div>
+        <div class="field">
+          <label>Location <span class="auto-tag">GPS</span></label>
+          <input type="text" id="vLoc" readonly placeholder="Fetching GPS...">
+          <input type="hidden" id="vLat"><input type="hidden" id="vLng">
+        </div>
+      </div>
+    </div>
+
+    <!-- MERCHANDISER & STORE -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">🏪</div><div><div class="title">Merchandiser & Store</div><div class="sub">Store code fills automatically</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Merchandiser Name <span class="req">*</span></label>
+          <select id="merc" onchange="onMerc()">
+            <option value="">Select name</option>
+            <option>Amit</option><option>Amol</option><option>Bharath</option><option>Dev</option>
+            <option>Harsali</option><option>Kiran</option><option>Sagar</option>
+            <option>Subhankar Sengupta</option><option>Others</option>
+          </select>
+        </div>
+        <div class="field" id="mercOtherField" style="display:none">
+          <label>Your Name <span class="req">*</span></label>
+          <input type="text" id="mercOther" placeholder="Enter your name">
+        </div>
+        <div class="field">
+          <label>Store Name <span class="req">*</span></label>
+          <select id="store" onchange="onStore()"><option value="">Select merchandiser first</option></select>
+        </div>
+        <div class="field" id="storeOtherField" style="display:none">
+          <label>Store Name <span class="req">*</span></label>
+          <input type="text" id="storeOther" placeholder="Enter store name">
+        </div>
+        <div class="field">
+          <label>Store Code</label>
+          <input type="text" id="storeCode" readonly placeholder="Auto-filled">
+        </div>
+      </div>
+    </div>
+
+    <!-- SOH -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">📦</div><div><div class="title">Stock on Hand (SOH)</div><div class="sub">Units currently on shelf</div></div></div>
+      <div class="card-body">
+        <div class="sku-row"><div class="sku-name">Digestive Biscuit</div><input class="sku-num" type="number" id="soh1" min="0" placeholder="0" oninput="prog()"></div>
+        <div class="sku-row"><div class="sku-name">Jeera Biscuit</div><input class="sku-num" type="number" id="soh2" min="0" placeholder="0" oninput="prog()"></div>
+        <div class="sku-row"><div class="sku-name">Chocolate Biscuit</div><input class="sku-num" type="number" id="soh3" min="0" placeholder="0" oninput="prog()"></div>
+        <div class="sku-row"><div class="sku-name">Assorted Story Box</div><input class="sku-num" type="number" id="soh4" min="0" placeholder="0" oninput="prog()"></div>
+      </div>
+    </div>
+
+    <!-- PRICE -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">💰</div><div><div class="title">Price Tag</div><div class="sub">Is the price displayed correctly?</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Price Correct? <span class="req">*</span></label>
+          <div class="yn-wrap">
+            <button type="button" class="yn-btn" id="pyBtn" onclick="setYN('yes')">✓ Yes</button>
+            <button type="button" class="yn-btn" id="pnBtn" onclick="setYN('no')">✗ No</button>
+          </div>
+          <input type="hidden" id="priceVal">
+        </div>
+      </div>
+    </div>
+
+    <!-- PHOTO -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">📷</div><div><div class="title">Proof Photo</div><div class="sub">Saved to Google Drive</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Upload Photo <span class="req">*</span></label>
+          <div class="photo-area" id="photoArea" onclick="document.getElementById('photoInput').click()">
+            <input type="file" id="photoInput" accept="image/*" capture="environment" onchange="onPhoto(this)">
+            <div class="ph-icon">📸</div>
+            <div class="ph-lbl">Tap to take photo or choose from gallery</div>
+            <div class="ph-sub">JPG or PNG · max 10MB</div>
+            <img id="photoPreview"><div id="photoName"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VISIBILITY -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">👁️</div><div><div class="title">Visibility</div><div class="sub">Which shelf is product on?</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Shelf Position <span class="req">*</span></label>
+          <select id="vis" onchange="onVis()">
+            <option value="">Select shelf</option>
+            <option>Shelf 1</option><option>Shelf 2</option><option>Shelf 3</option>
+            <option>Shelf 4</option><option>Shelf 5</option><option>Others</option>
+          </select>
+        </div>
+        <div class="field" id="visOtherField" style="display:none">
+          <label>Specify</label>
+          <input type="text" id="visOther" placeholder="e.g. End cap, gondola...">
+        </div>
+        <div class="field">
+          <label>Remarks (optional)</label>
+          <input type="text" id="remarks" placeholder="Any observations...">
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /form -->
+
+  <!-- SUCCESS -->
+  <div id="success">
+    <div class="ok-icon">✅</div>
+    <div class="ok-title">Submitted!</div>
+    <div class="ok-sub" id="okMsg">SOH entry recorded successfully.</div>
+    <button class="again-btn" onclick="reset()">Submit Another Entry</button>
+  </div>
+</div>
+
+<div class="submit-bar"><button class="submit-btn" id="subBtn" onclick="doSubmit()">Submit SOH Entry →</button></div>
+
+<script>
+const SCRIPT_URL = 'YOUR_APPS_SCRIPT_URL_HERE';
+
+const STORES = {"Amit":[{"code":"6208","name":"Almonte-Khardi Bypas","city":"Pune"},{"code":"6209","name":"Tain Sqr-Fatima Ngr","city":"Pune"},{"code":"6219","name":"AUNDH","city":"Pune"},{"code":"6719","name":"Erandwane","city":"Pune"},{"code":"FRAF","name":"Smart Bazar Amanora Park","city":"Pune"},{"code":"FRAG","name":"Smart Bazar Kothrud City Pride","city":"Pune"},{"code":"FRAH","name":"Smart Bazar Kumar Pacific Mall","city":"Pune"},{"code":"FRAI","name":"Smart Bazar Pimpri Premier Plaza","city":"Pune"},{"code":"FRAJ","name":"Smart Bazar Vishrantwadi","city":"Pune"},{"code":"TDE3","name":"Undri","city":"Pune"},{"code":"TGC1","name":"Vision Flora Pimple Saudagar","city":"Pune"},{"code":"TGL3","name":"RRL Smart Wakad","city":"Pune"},{"code":"TKX8","name":"Vishal Capital Chakan","city":"Pune"},{"code":"TMN0","name":"Smart Moshi","city":"Pune"},{"code":"TNP8","name":"Smart Manjri Budruk","city":"Pune"},{"code":"TOG7","name":"Smart Platinum Towers Kharadi","city":"Pune"},{"code":"TPT7","name":"Smart Shantai Talegaon","city":"Pune"},{"code":"TX40","name":"Elpro Chinchwad","city":"Pune"},{"code":"TXQV","name":"SmartNet Dr Dayma Property","city":"Pune"},{"code":"TZ53","name":"One Mall","city":"Pune"},{"code":"TZ55","name":"Jagtap Property Pimple Gurav","city":"Pune"}],"Amol":[{"code":"3119","name":"SB Agar Bazar","city":"Mumbai"},{"code":"6220","name":"Phoenix Market City","city":"Mumbai"},{"code":"TI76","name":"Chandra Mall","city":"Mumbai"},{"code":"TMZ9","name":"Nisarg Greens Ambernath","city":"Mumbai"},{"code":"TOJ6","name":"Smart R City Mall Ghatkopar","city":"Mumbai"},{"code":"TQ59","name":"Smart GoodLife Boisar","city":"Mumbai"},{"code":"TQ60","name":"Vertex Khadapada","city":"Mumbai"},{"code":"FR00","name":"Smart Bazar Dombivli","city":"Mumbai"},{"code":"4026","name":"Bhopar Dombivli DMart","city":"Mumbai"},{"code":"4019","name":"Mulund DMart","city":"Mumbai"},{"code":"4067","name":"Chembur DMart","city":"Mumbai"},{"code":"4040","name":"Kanjurmarg DMart","city":"Mumbai"},{"code":"TM95","name":"Sai Krupa Kharghar","city":"Navi Mumbai"},{"code":"4020","name":"New Panvel DMart","city":"Navi Mumbai"},{"code":"4048","name":"Panvel Highway DMart","city":"Navi Mumbai"},{"code":"4016","name":"Seawoods DMart","city":"Navi Mumbai"},{"code":"4022","name":"Airoli DMart","city":"Navi Mumbai"},{"code":"FR07","name":"Smart Bazar Panvel Orion","city":"Navi Mumbai"},{"code":"FR08","name":"Smart Bazar Seawoods","city":"Navi Mumbai"},{"code":"FR22","name":"Hypercity Inorbit","city":"Navi Mumbai"},{"code":"TCM3","name":"Smart Sunteck Airoli","city":"Navi Mumbai"},{"code":"TFP9","name":"Om Namah Shivay Karanjade","city":"Navi Mumbai"},{"code":"4017","name":"Thane Garden Estate DMart","city":"Thane"},{"code":"FR11","name":"Smart Bazar Dahisar Thakur","city":"Thane"},{"code":"FR14","name":"Smart Bazar Kalyan Netivali","city":"Thane"},{"code":"T188","name":"SMT Dombivali West","city":"Thane"},{"code":"TAFW","name":"Smart R Mall Thane","city":"Thane"},{"code":"TAJF","name":"Smart Badlapur West","city":"Thane"},{"code":"TOM0","name":"Korum Mall","city":"Thane"},{"code":"TZ6V","name":"SMT Concept A Thane","city":"Thane"},{"code":"TZ6W","name":"Smart Thanekar Palasia","city":"Thane"},{"code":"FR15","name":"Smart Bazar Viva City Thane","city":"Thane"}],"Bharath":[{"code":"6225","name":"Vijaynagar TTMC","city":"Bangalore"},{"code":"FR43","name":"Smart Bazar VB Colony","city":"Bangalore"},{"code":"FR44","name":"Smart Bazar JP Nagar","city":"Bangalore"},{"code":"FR45","name":"Smart Bazar Banshankari","city":"Bangalore"},{"code":"FR47","name":"Smart Bazar Gateway Jayanagar","city":"Bangalore"},{"code":"FR48","name":"Smart Bazar Malleshwaram","city":"Bangalore"},{"code":"FR49","name":"Smart Bazar Rajaji Nagar","city":"Bangalore"},{"code":"TD8B","name":"SMT Shantinagar Bangalore","city":"Bangalore"},{"code":"TFU5","name":"Vikhyath KR Puram","city":"Bangalore"},{"code":"TKN2","name":"Chandapura","city":"Bangalore"},{"code":"TLI7","name":"Smart Electronic City","city":"Bangalore"},{"code":"TR28","name":"Shivananjaiah Malagala Rd","city":"Bangalore"},{"code":"5605","name":"Bommasandra DMart","city":"Bangalore"},{"code":"5606","name":"Electronic City DMart","city":"Bangalore"},{"code":"5625","name":"Saroja Complex Banshankari DMart","city":"Bangalore"},{"code":"5601","name":"Siddapura DMart","city":"Bangalore"},{"code":"5721","name":"Sira Tumakuru DMart","city":"Bangalore"},{"code":"5613","name":"Hongasandra DMart","city":"Bangalore"}],"Dev":[{"code":"FRCX","name":"Smart Bazar Vasant Kunj","city":"New Delhi"},{"code":"FRDB","name":"Smart Bazar Kalkaji","city":"New Delhi"},{"code":"6205","name":"Crown Interiorz Mall","city":"Faridabad"},{"code":"FRDD","name":"Faridabad Grand Mall","city":"Faridabad"},{"code":"FRDE","name":"Smart Bazar Shipra Mall","city":"Ghaziabad"},{"code":"FRDH","name":"Smart Bazar Opulent Mall","city":"Ghaziabad"},{"code":"FRDI","name":"Smart Bazar Mahagun Mall","city":"Ghaziabad"},{"code":"FRDJ","name":"Smart Bazar Aditya Mall","city":"Ghaziabad"},{"code":"T913","name":"Jaipuria","city":"Ghaziabad"},{"code":"T915","name":"Signature Street","city":"Ghaziabad"},{"code":"TH89","name":"Aero Business Tower","city":"Ghaziabad"},{"code":"TH8K","name":"SMT Signature Street G","city":"Ghaziabad"},{"code":"TI77","name":"Smart KW Delhi 6","city":"Ghaziabad"},{"code":"FRDF","name":"Smart Bazar Mall of India","city":"Noida"},{"code":"FRDK","name":"Smart Bazar Great India Place","city":"Noida"},{"code":"FRDL","name":"Smart Bazar Logix City","city":"Noida"},{"code":"FRDM","name":"Smart Bazar Gaur City","city":"Noida"},{"code":"T1CU","name":"Smart Paras One 33","city":"Noida"},{"code":"TH86","name":"SMART Beta Plaza","city":"Noida"}],"Harsali":[{"code":"2620","name":"Swadeshi Chunabhatti","city":"Mumbai"},{"code":"3104","name":"RF SB Bandra","city":"Mumbai"},{"code":"5518","name":"Merchandising Centre","city":"Mumbai"},{"code":"6210","name":"Central City Mall","city":"Mumbai"},{"code":"6217","name":"Acme Mall","city":"Mumbai"},{"code":"6221","name":"D Victoria Mall","city":"Mumbai"},{"code":"6731","name":"Super Gulmohar Plaza","city":"Mumbai"},{"code":"FR03","name":"Smart Bazar Malad Infinity","city":"Mumbai"},{"code":"T0II","name":"Smart TW Gardens Kandivali","city":"Mumbai"},{"code":"T31K","name":"Smart Bazaar Ivory Mall","city":"Mumbai"},{"code":"TA10","name":"Kanchpara Malad","city":"Mumbai"},{"code":"TF14","name":"Centre Point","city":"Mumbai"},{"code":"TQ21","name":"Santosh Nagar Goregaon","city":"Mumbai"},{"code":"TZT7","name":"SB Smart Poonam Nagar Andheri","city":"Mumbai"},{"code":"FR04","name":"Smart Bazar Matunga Era House","city":"Mumbai"},{"code":"FR06","name":"Smart Bazar Vile Parle","city":"Mumbai"},{"code":"4052","name":"Andheri (E) DMart","city":"Mumbai"},{"code":"4045","name":"Virar (E) DMart","city":"Mumbai"},{"code":"4021","name":"Kandivali DMart","city":"Mumbai"},{"code":"4018","name":"Vasai DMart","city":"Vasai"},{"code":"4036","name":"Dahisar DMart","city":"Mumbai"},{"code":"4031","name":"Virar DMart","city":"Virar"},{"code":"FR10","name":"Smart Bazar Bhayander Maxus","city":"Thane"},{"code":"FR16","name":"Smart Bazar Vasai Dattani","city":"Vasai"},{"code":"FR17","name":"Virar Yashwant Building","city":"Virar"}],"Kiran":[{"code":"6243","name":"Super Vidyaranyapura","city":"Bangalore"},{"code":"FR40","name":"Smart Bazar Royal Meenakshi","city":"Bangalore"},{"code":"FR42","name":"Smart Bazar Soul Space Bellandur","city":"Bangalore"},{"code":"FR46","name":"Smart Bazar Hesaraghatta","city":"Bangalore"},{"code":"T9UC","name":"SMT KR Hessarghatta Main Rd","city":"Bangalore"},{"code":"TAJ2","name":"Smart Kothanur","city":"Bangalore"},{"code":"TEC9","name":"Smart Akshay Nagar","city":"Bangalore"},{"code":"TFY4","name":"Bhartiya City Thanisandra","city":"Bangalore"},{"code":"TMZ6","name":"Vignananagar","city":"Bangalore"},{"code":"TOD6","name":"Smart NRI Layout","city":"Bangalore"},{"code":"TOD7","name":"Smart HSR Layout","city":"Bangalore"},{"code":"TX88","name":"Monarch Serenity","city":"Bangalore"},{"code":"5616","name":"Ram Murthy Nagar DMart","city":"Bangalore"},{"code":"5621","name":"KHB Yelahanka DMart","city":"Bangalore"},{"code":"5608","name":"Hennur DMart","city":"Bangalore"},{"code":"5610","name":"Kanakpura Road DMart","city":"Bangalore"},{"code":"5631","name":"Srigandha DMart","city":"Bangalore"},{"code":"6302","name":"Hosur DMart","city":"Bangalore"},{"code":"5603","name":"SJR Sarjapur DMart","city":"Bangalore"},{"code":"5633","name":"Hoodi DMart","city":"Bangalore"},{"code":"5604","name":"Garuda Mall DMart","city":"Bangalore"}],"Sagar":[{"code":"6239","name":"Reliance Mall Dwarka","city":"Delhi"},{"code":"TL30","name":"Vikaspuri","city":"Delhi"},{"code":"TP06","name":"SMART Aggarwal Prestige Mall","city":"Delhi"},{"code":"TU21","name":"G3S Mall Rohini","city":"Delhi"},{"code":"TW11","name":"Shivaji Marg Najafgarh","city":"Delhi"},{"code":"FRCS","name":"Smart Bazar Orchard Road Mall","city":"New Delhi"},{"code":"FRCW","name":"Smart Bazar Rajendra Place Metro","city":"New Delhi"},{"code":"FRDA","name":"Smart Bazar V3S Mall","city":"New Delhi"},{"code":"2364","name":"Jharsa Road","city":"Gurgaon"},{"code":"6701","name":"DLF Mega Mall","city":"Gurgaon"},{"code":"FRCO","name":"Smart Bazar Ambi Mall","city":"Gurgaon"},{"code":"FRCP","name":"Smart Bazar Omaxe Sohna Road","city":"Gurgaon"},{"code":"FRCQ","name":"Smart Bazar Sahara Mall","city":"Gurgaon"},{"code":"T971","name":"Smart M3M Urbana Premium","city":"Gurgaon"},{"code":"TC74","name":"Iris Broadway","city":"Gurgaon"},{"code":"TIX3","name":"Aria Mall","city":"Gurgaon"}],"Subhankar Sengupta":[{"code":"2951","name":"RRL Super Rosedale","city":"Kolkata"},{"code":"FRBT","name":"Smart Bazar Birati","city":"Kolkata"},{"code":"FRBU","name":"Smart Bazar DCN Mall Jessore Rd","city":"Kolkata"},{"code":"FRBV","name":"Smart Bazar Hiland Park","city":"Kolkata"},{"code":"FRBW","name":"Smart Bazar Jadavpur Orbit Mall","city":"Kolkata"},{"code":"FRCA","name":"Smart Bazar Rashbehari Avenue","city":"Kolkata"},{"code":"FRCB","name":"Smart Bazar Salt Lake","city":"Kolkata"},{"code":"FRCC","name":"Smart Bazar Sealdah","city":"Kolkata"},{"code":"FRCF","name":"Smart Bazar VIP Road","city":"Kolkata"},{"code":"FRCG","name":"Smart Bazar Wood Square Mall","city":"Kolkata"},{"code":"FRLF","name":"Smart Bazar Khiderpore","city":"Kolkata"},{"code":"T1C1","name":"SMT Shyamnagar","city":"Kolkata"},{"code":"T1NA","name":"Smart South Planox Mall","city":"Kolkata"},{"code":"T60N","name":"SMT Greenfield","city":"Kolkata"},{"code":"TH92","name":"RS Newtown Plaza","city":"Kolkata"},{"code":"TIT6","name":"RRL Smart Ghosh Para Road B","city":"Kolkata"},{"code":"TMM5","name":"Smart Behala","city":"Kolkata"},{"code":"TMM6","name":"Smart Garia","city":"Kolkata"},{"code":"TMZ5","name":"SMART Madhyamgram","city":"Kolkata"},{"code":"TR85","name":"Oracle Realmark Narendrapur","city":"Kolkata"}]};
+
+// ── Init ──────────────────────────────────────────────
+const now = new Date();
+document.getElementById('vDate').value = now.toISOString().split('T')[0];
+document.getElementById('vTime').value = now.toTimeString().substring(0,5);
+
+if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      const lat = p.coords.latitude.toFixed(6);
+      const lng = p.coords.longitude.toFixed(6);
+      document.getElementById('vLat').value = lat;
+      document.getElementById('vLng').value = lng;
+      document.getElementById('vLoc').value = lat + ', ' + lng;
+    },
+    () => { document.getElementById('vLoc').value = 'Location unavailable'; }
+  );
+} else {
+  document.getElementById('vLoc').value = 'GPS not supported';
+}
+
+// ── Merchandiser change ───────────────────────────────
+function onMerc() {
+  const val = document.getElementById('merc').value;
+  document.getElementById('mercOtherField').style.display = val === 'Others' ? 'block' : 'none';
+  const sel = document.getElementById('store');
+  sel.innerHTML = '<option value="">Select store</option>';
+  document.getElementById('storeCode').value = '';
+  document.getElementById('storeOtherField').style.display = 'none';
+
+  if (val && val !== 'Others' && STORES[val]) {
+    // Group by city
+    const grouped = {};
+    STORES[val].forEach(s => {
+      if (!grouped[s.city]) grouped[s.city] = [];
+      grouped[s.city].push(s);
+    });
+    Object.entries(grouped).forEach(([city, stores]) => {
+      const og = document.createElement('optgroup');
+      og.label = city;
+      stores.forEach(s => {
+        const o = document.createElement('option');
+        o.value = s.code + '||' + s.name;
+        o.textContent = s.name;
+        og.appendChild(o);
+      });
+      sel.appendChild(og);
+    });
+  }
+  // Always add Others at end
+  const oo = document.createElement('option');
+  oo.value = 'OTHERS||Others';
+  oo.textContent = 'Others';
+  sel.appendChild(oo);
+  prog();
+}
+
+// ── Store change ──────────────────────────────────────
+function onStore() {
+  const val = document.getElementById('store').value;
+  if (!val) { document.getElementById('storeCode').value = ''; document.getElementById('storeOtherField').style.display = 'none'; return; }
+  const parts = val.split('||');
+  if (parts[0] === 'OTHERS') {
+    document.getElementById('storeCode').value = '';
+    document.getElementById('storeOtherField').style.display = 'block';
+  } else {
+    document.getElementById('storeCode').value = parts[0];
+    document.getElementById('storeOtherField').style.display = 'none';
+  }
+  prog();
+}
+
+// ── Visibility change ─────────────────────────────────
+function onVis() {
+  document.getElementById('visOtherField').style.display =
+    document.getElementById('vis').value === 'Others' ? 'block' : 'none';
+  prog();
+}
+
+// ── Price Y/N ─────────────────────────────────────────
+function setYN(v) {
+  document.getElementById('pyBtn').className = 'yn-btn' + (v === 'yes' ? ' yes' : '');
+  document.getElementById('pnBtn').className = 'yn-btn' + (v === 'no'  ? ' no'  : '');
+  document.getElementById('priceVal').value  = v === 'yes' ? 'Yes' : 'No';
+  prog();
+}
+
+// ── Photo ─────────────────────────────────────────────
+let fileDataURI = '';
+let fileNameStr = '';
+
+function onPhoto(input) {
+  const file = input.files[0];
+  if (!file) return;
+  if (file.size > 10 * 1024 * 1024) { showErr('Photo too large. Max 10MB.'); return; }
+  const reader = new FileReader();
+  reader.onload = e => {
+    fileDataURI = e.target.result;            // full data URI  e.g. "data:image/jpeg;base64,..."
+    fileNameStr = file.name;
+    document.getElementById('photoPreview').src = fileDataURI;
+    document.getElementById('photoPreview').style.display = 'block';
+    document.getElementById('photoName').textContent = '✓ ' + file.name;
+    document.getElementById('photoName').style.display = 'block';
+    document.getElementById('photoArea').classList.add('has-photo');
+    prog();
+  };
+  reader.readAsDataURL(file);
+}
+
+// ── Progress bar ──────────────────────────────────────
+function prog() {
+  let n = 0;
+  if (document.getElementById('merc').value)  n++;
+  if (document.getElementById('store').value) n++;
+  if (document.getElementById('priceVal').value) n++;
+  if (document.getElementById('vis').value)   n++;
+  if (fileDataURI) n++;
+  document.getElementById('prog').style.width = Math.round(n / 5 * 100) + '%';
+}
+
+// ── Helpers ───────────────────────────────────────────
+function gv(id) { return (document.getElementById(id) || {}).value || ''; }
+function gn(id) { return parseInt(gv(id)) || 0; }
+function showErr(msg) {
+  const b = document.getElementById('err');
+  b.textContent = msg; b.classList.add('show');
+  b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(() => b.classList.remove('show'), 5000);
+}
+
+// ── Submit ────────────────────────────────────────────
+function doSubmit() {
+  const mercSel   = gv('merc');
+  const mercFinal = mercSel === 'Others' ? gv('mercOther').trim() : mercSel;
+  const storeVal  = gv('store');
+  const visSel    = gv('vis');
+  const visFinal  = visSel === 'Others' ? gv('visOther').trim() : visSel;
+
+  if (!mercFinal)        { showErr('Please select or enter your name.');        return; }
+  if (!storeVal)         { showErr('Please select a store.');                   return; }
+  if (!gv('priceVal'))   { showErr('Please indicate if price is correct.');     return; }
+  if (!fileDataURI)      { showErr('Please upload a proof photo.');             return; }
+  if (!visFinal)         { showErr('Please select shelf visibility.');          return; }
+
+  const storeParts = storeVal.split('||');
+  const storeCode  = storeParts[0] === 'OTHERS' ? 'OTHER' : storeParts[0];
+  const storeName  = storeParts[0] === 'OTHERS' ? (gv('storeOther') || 'Others') : storeParts[1];
+
+  const payload = {
+    date:         gv('vDate'),
+    time:         gv('vTime') || new Date().toTimeString().substring(0, 5),
+    lat:          gv('vLat'),
+    lng:          gv('vLng'),
+    merchandiser: mercFinal,
+    storeName,
+    storeCode,
+    soh_digestive: gn('soh1'),
+    soh_jeera:     gn('soh2'),
+    soh_choco:     gn('soh3'),
+    soh_assorted:  gn('soh4'),
+    priceCorrect:  gv('priceVal'),
+    fileData:      fileDataURI,   // full data URI — Apps Script splits this
+    fileName:      fileNameStr,
+    visibility:    visFinal,
+    remarks:       gv('remarks')
+  };
+
+  document.getElementById('overlay').classList.add('show');
+  document.getElementById('subBtn').disabled = true;
+
+  fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
+    .then(r => r.json())
+    .then(d => {
+      document.getElementById('overlay').classList.remove('show');
+      if (d.status === 'success') {
+        document.getElementById('form').style.display    = 'none';
+        document.getElementById('success').style.display = 'block';
+        document.querySelector('.submit-bar').style.display = 'none';
+        document.getElementById('okMsg').textContent =
+          'SOH for ' + storeName + ' saved. ID: ' + (d.id || '—');
+      } else {
+        document.getElementById('subBtn').disabled = false;
+        showErr('Error: ' + (d.message || 'Unknown error. Try again.'));
+      }
+    })
+    .catch(err => {
+      document.getElementById('overlay').classList.remove('show');
+      document.getElementById('subBtn').disabled = false;
+      showErr('Network error. Check your connection and try again.');
+    });
+}
+
+// ── Reset ─────────────────────────────────────────────
+function reset() {
+  document.getElementById('form').style.display    = 'block';
+  document.getElementById('success').style.display = 'none';
+  document.querySelector('.submit-bar').style.display = 'block';
+  document.getElementById('subBtn').disabled = false;
+
+  // Clear all inputs
+  document.querySelectorAll('input:not([readonly]):not([type=hidden])').forEach(el => el.value = '');
+  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+  document.getElementById('storeCode').value = '';
+  document.getElementById('priceVal').value  = '';
+  document.getElementById('mercOtherField').style.display  = 'none';
+  document.getElementById('storeOtherField').style.display = 'none';
+  document.getElementById('visOtherField').style.display   = 'none';
+  document.getElementById('store').innerHTML = '<option value="">Select merchandiser first</option>';
+  document.getElementById('pyBtn').className = 'yn-btn';
+  document.getElementById('pnBtn').className = 'yn-btn';
+  document.getElementById('photoPreview').style.display = 'none';
+  document.getElementById('photoName').style.display    = 'none';
+  document.getElementById('photoArea').classList.remove('has-photo');
+  fileDataURI = ''; fileNameStr = '';
+  document.getElementById('err').classList.remove('show');
+
+  const n = new Date();
+  document.getElementById('vDate').value = n.toISOString().split('T')[0];
+  document.getElementById('vTime').value = n.toTimeString().substring(0, 5);
+  document.getElementById('prog').style.width = '0%';
+  window.scrollTo(0, 0);
+}
+</script>
+</body>
+</html>
