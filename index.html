@@ -2,614 +2,649 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
 <title>Open Secret — Merchandiser SOH</title>
 <style>
-@import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+*{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#F5F4F0;--white:#fff;--border:rgba(0,0,0,0.1);
+  --bg:#F5F4F0;--white:#fff;--border:#D0CECC;
   --text:#1A1A18;--text2:#6B6860;--text3:#9C9A94;
-  --accent:#1A3E8C;--accent2:#2D5BE3;
+  --blue:#1A3E8C;--blue2:#2D5BE3;
   --green:#1A8A5A;--green-bg:#E8F5EE;
   --red:#C4351A;--red-bg:#FDEEE8;
-  --r:12px;--r-sm:8px;
+  --r:12px;--rs:8px;
 }
-body{font-family:"DM Sans",sans-serif;background:var(--bg);color:var(--text);min-height:100vh;font-size:15px;}
-header{background:var(--accent);color:#fff;padding:14px 18px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:100;box-shadow:0 2px 8px rgba(0,0,0,0.2);}
-.logo{width:34px;height:34px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:13px;color:var(--accent);flex-shrink:0;}
-header h1{font-size:15px;font-weight:600;}
-header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
-.prog-wrap{height:3px;background:rgba(255,255,255,0.2);position:sticky;top:62px;z-index:99;}
-.prog-bar{height:100%;background:#fff;border-radius:2px;transition:width 0.3s;}
-.wrap{max-width:500px;margin:0 auto;padding:16px 14px 110px;}
-.card{background:var(--white);border-radius:var(--r);border:1px solid var(--border);margin-bottom:14px;overflow:hidden;}
-.card-hdr{padding:12px 15px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:9px;background:#FAFAF8;}
-.card-hdr .icon{font-size:17px;}
-.card-hdr .title{font-size:13px;font-weight:600;}
-.card-hdr .sub{font-size:11px;color:var(--text2);margin-top:1px;}
-.card-body{padding:15px;}
-.field{margin-bottom:13px;}
-.field:last-child{margin-bottom:0;}
-.field label{display:block;font-size:11px;font-weight:600;color:var(--text2);margin-bottom:5px;text-transform:uppercase;letter-spacing:0.05em;}
+body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text);font-size:16px;min-height:100vh;}
+header{background:var(--blue);color:#fff;padding:14px 16px;display:flex;align-items:center;gap:10px;position:sticky;top:0;z-index:50;}
+.hlogo{width:36px;height:36px;background:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;color:var(--blue);flex-shrink:0;}
+header h1{font-size:16px;font-weight:700;line-height:1.2;}
+header p{font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;}
+.pbar-wrap{height:4px;background:rgba(255,255,255,0.25);position:sticky;top:64px;z-index:49;}
+.pbar{height:100%;background:#fff;transition:width .4s;border-radius:2px;}
+.page{max-width:480px;margin:0 auto;padding:16px 14px 120px;}
+/* CARD */
+.card{background:#fff;border-radius:var(--r);border:1px solid var(--border);margin-bottom:16px;overflow:hidden;}
+.card-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px;background:#FAFAF8;}
+.card-head .ci{font-size:20px;}
+.card-head .ct{font-size:14px;font-weight:700;}
+.card-head .cs{font-size:12px;color:var(--text2);margin-top:2px;}
+.card-body{padding:16px;}
+/* FIELD */
+.f{margin-bottom:14px;}
+.f:last-child{margin-bottom:0;}
+.f label{display:block;font-size:12px;font-weight:600;color:var(--text2);margin-bottom:6px;text-transform:uppercase;letter-spacing:.05em;}
 .req{color:var(--red);}
-.field input,.field select{width:100%;padding:11px 13px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:15px;color:var(--text);background:#fff;outline:none;transition:border-color 0.15s;-webkit-appearance:none;appearance:none;}
-.field select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='7' viewBox='0 0 12 7'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%236B6860' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 13px center;padding-right:34px;}
-.field input:focus,.field select:focus{border-color:var(--accent2);}
-.field input[readonly]{background:#F5F4F0;color:var(--text2);}
-.auto-tag{background:var(--green-bg);color:var(--green);font-size:10px;font-weight:600;padding:2px 7px;border-radius:4px;margin-left:5px;vertical-align:middle;}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
-.sku-row{display:grid;grid-template-columns:1fr 90px;gap:10px;align-items:center;padding:10px 0;border-bottom:1px solid rgba(0,0,0,0.05);}
-.sku-row:last-child{border-bottom:none;padding-bottom:0;}
-.sku-name{font-size:13px;font-weight:500;}
-.sku-num{font-family:"DM Mono",monospace;font-size:16px;padding:9px;border:1.5px solid var(--border);border-radius:var(--r-sm);text-align:center;width:100%;outline:none;}
-.sku-num:focus{border-color:var(--accent2);}
-.yn-wrap{display:flex;gap:8px;}
-.yn-btn{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:500;cursor:pointer;background:#fff;color:var(--text2);transition:all 0.15s;font-family:"DM Sans",sans-serif;text-align:center;}
-.yn-btn.yes{border-color:var(--green);background:var(--green-bg);color:var(--green);}
-.yn-btn.no{border-color:var(--red);background:var(--red-bg);color:var(--red);}
+.f input,.f select,.f textarea{
+  display:block;width:100%;padding:13px 14px;
+  border:1.5px solid var(--border);border-radius:var(--rs);
+  font-size:16px;font-family:inherit;color:var(--text);
+  background:#fff;outline:none;
+  -webkit-appearance:none;appearance:none;
+}
+.f select{
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='8'%3E%3Cpath d='M1 1l6 6 6-6' stroke='%236B6860' stroke-width='2' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat;background-position:right 14px center;padding-right:40px;
+}
+.f input:focus,.f select:focus{border-color:var(--blue2);outline:none;}
+.f input[readonly]{background:#F0EDE8;color:var(--text2);}
+.f input[type=number]{-moz-appearance:textfield;}
+.f input[type=number]::-webkit-inner-spin-button{-webkit-appearance:none;}
+.tag{display:inline-block;background:var(--green-bg);color:var(--green);font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;margin-left:6px;vertical-align:middle;}
+.row2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+/* GPS */
+.gps-row{display:flex;gap:8px;}
+.gps-row input{flex:1;}
+.gps-btn{padding:13px 16px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;white-space:nowrap;}
+.gps-hint{font-size:12px;margin-top:5px;}
+/* SKU */
+.sku-row{display:flex;align-items:center;justify-content:space-between;padding:11px 0;border-bottom:1px solid #F0EDE8;}
+.sku-row:last-child{border-bottom:none;}
+.sku-label{font-size:14px;font-weight:500;}
+.sku-input{width:90px;padding:10px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:17px;text-align:center;font-family:monospace;outline:none;}
+.sku-input:focus{border-color:var(--blue2);}
+/* Y/N */
+.yn{display:flex;gap:10px;}
+.yn-btn{flex:1;padding:13px;border:1.5px solid var(--border);border-radius:var(--rs);font-size:15px;font-weight:600;cursor:pointer;background:#fff;color:var(--text2);font-family:inherit;transition:all .15s;}
+.yn-btn.Y{border-color:var(--green);background:var(--green-bg);color:var(--green);}
+.yn-btn.N{border-color:var(--red);background:var(--red-bg);color:var(--red);}
 /* PHOTOS */
-.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
-.photo-slot{border:1.5px dashed var(--border);border-radius:var(--r-sm);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;background:#FAFAF8;position:relative;overflow:hidden;}
-.photo-slot:hover{border-color:var(--accent2);}
-.photo-slot.filled{border-color:var(--green);border-style:solid;}
-.photo-slot.required-empty{border-color:var(--red);}
-.photo-slot img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--r-sm) - 2px);}
-.photo-slot .slot-icon{font-size:24px;margin-bottom:4px;}
-.photo-slot .slot-lbl{font-size:11px;color:var(--text3);}
-.photo-slot .slot-req{font-size:10px;color:var(--red);margin-top:2px;}
-.photo-slot .remove-btn{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
-.photo-note{font-size:11px;color:var(--text2);text-align:center;}
-.photo-btns{display:flex;gap:8px;margin-bottom:10px;}
-.photo-btn{flex:1;padding:10px;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
-.photo-btn.cam{background:var(--accent);color:#fff;}
-.photo-btn.gal{background:var(--white);color:var(--accent);border:1.5px solid var(--accent);}
-.submit-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:14px 16px;z-index:100;}
-.submit-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
-.submit-btn:active{opacity:0.85;}
-.submit-btn:disabled{opacity:0.35;cursor:not-allowed;}
-.err{background:var(--red-bg);color:var(--red);border:1px solid rgba(196,53,26,0.2);border-radius:var(--r-sm);padding:11px 13px;font-size:13px;margin-bottom:14px;display:none;}
-.err.show{display:block;}
-#overlay{display:none;position:fixed;inset:0;background:rgba(255,255,255,0.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:14px;}
-#overlay.show{display:flex;}
-.spin{width:38px;height:38px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:sp 0.8s linear infinite;}
+.photo-btns{display:flex;gap:10px;margin-bottom:12px;}
+.pbtn{flex:1;padding:12px;border-radius:var(--rs);font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;border:none;}
+.pbtn.cam{background:var(--blue);color:#fff;}
+.pbtn.gal{background:#fff;color:var(--blue);border:1.5px solid var(--blue);}
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:8px;}
+.pslot{border:2px dashed var(--border);border-radius:var(--rs);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;background:#FAFAF8;position:relative;overflow:hidden;cursor:pointer;}
+.pslot .pi{font-size:26px;margin-bottom:4px;}
+.pslot .pl{font-size:12px;color:var(--text3);}
+.pslot .pr{font-size:11px;color:var(--red);margin-top:3px;}
+.pslot img{width:100%;height:100%;object-fit:cover;}
+.pslot.ok{border:2px solid var(--green);border-style:solid;}
+.pslot .px{position:absolute;top:5px;right:5px;width:24px;height:24px;background:rgba(0,0,0,.55);color:#fff;border:none;border-radius:50%;font-size:13px;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:0;}
+.photo-count{font-size:12px;color:var(--text2);text-align:center;}
+/* SUBMIT */
+.footer{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:14px 16px;}
+.sub-btn{width:100%;padding:16px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);font-size:17px;font-weight:700;cursor:pointer;font-family:inherit;letter-spacing:.01em;}
+.sub-btn:disabled{opacity:.35;cursor:not-allowed;}
+/* ERROR */
+.errmsg{background:var(--red-bg);color:var(--red);border:1px solid rgba(196,53,26,.25);border-radius:var(--rs);padding:12px 14px;font-size:14px;margin-bottom:14px;display:none;}
+.errmsg.on{display:block;}
+/* OVERLAY */
+#ov{display:none;position:fixed;inset:0;background:rgba(255,255,255,.9);z-index:999;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+#ov.on{display:flex;}
+.spin{width:40px;height:40px;border:3px solid #eee;border-top-color:var(--blue);border-radius:50%;animation:sp .8s linear infinite;}
 @keyframes sp{to{transform:rotate(360deg);}}
-#success{display:none;text-align:center;padding:60px 20px;}
-.ok-icon{font-size:60px;margin-bottom:16px;}
-.ok-title{font-size:21px;font-weight:600;margin-bottom:8px;}
-.ok-sub{color:var(--text2);font-size:13px;margin-bottom:28px;line-height:1.6;}
-.again-btn{padding:13px 30px;background:var(--accent);color:#fff;border-radius:var(--r-sm);font-size:15px;font-weight:600;cursor:pointer;border:none;font-family:"DM Sans",sans-serif;}
+/* SUCCESS */
+#suc{display:none;text-align:center;padding:60px 20px;}
+#suc .si{font-size:64px;margin-bottom:18px;}
+#suc h2{font-size:22px;font-weight:700;margin-bottom:8px;}
+#suc p{color:var(--text2);font-size:14px;margin-bottom:30px;line-height:1.6;}
+#suc button{padding:14px 32px;background:var(--blue);color:#fff;border:none;border-radius:var(--rs);font-size:16px;font-weight:700;cursor:pointer;font-family:inherit;}
 </style>
 </head>
 <body>
+
 <header>
-  <div class="logo">OS</div>
+  <div class="hlogo">OS</div>
   <div><h1>Open Secret</h1><p>Merchandiser SOH Form</p></div>
 </header>
-<div class="prog-wrap"><div class="prog-bar" id="prog" style="width:0%"></div></div>
-<div id="overlay"><div class="spin"></div><p style="font-size:13px;color:#666">Submitting...</p></div>
+<div class="pbar-wrap"><div class="pbar" id="pb" style="width:0%"></div></div>
 
-<div class="wrap">
-  <div id="form">
-    <div class="err" id="err"></div>
+<div id="ov"><div class="spin"></div><p style="font-size:14px;color:#666">Submitting...</p></div>
 
-    <!-- VISIT DETAILS -->
+<div class="page">
+  <div id="mainForm">
+    <div class="errmsg" id="em"></div>
+
+    <!-- 1. VISIT -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">📋</div><div><div class="title">Visit Details</div><div class="sub">Auto-captures time & location</div></div></div>
+      <div class="card-head"><div class="ci">📋</div><div><div class="ct">Visit Details</div><div class="cs">Date, time & GPS</div></div></div>
       <div class="card-body">
-        <div class="grid2">
-          <div class="field"><label>Date <span class="req">*</span></label><input type="date" id="vDate"></div>
-          <div class="field"><label>Time <span class="auto-tag">Auto</span></label><input type="time" id="vTime" readonly></div>
+        <div class="row2">
+          <div class="f"><label>Date <span class="req">*</span></label><input type="date" id="D_date"></div>
+          <div class="f"><label>Time <span class="tag">Auto</span></label><input type="time" id="D_time"></div>
         </div>
-        <div class="field">
-          <label>GPS Location <span class="req">*</span> <span class="auto-tag">Auto</span></label>
-          <div style="display:flex;gap:8px;align-items:center;">
-            <input type="text" id="vLoc" readonly placeholder="Tap Refresh to get location" style="flex:1;">
-            <button type="button" onclick="getGPS()" style="padding:11px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
+        <div class="f">
+          <label>GPS Location <span class="req">*</span> <span class="tag">Auto</span></label>
+          <div class="gps-row">
+            <input type="text" id="D_loc" placeholder="Tap 🔄 to get location" readonly>
+            <button type="button" class="gps-btn" onclick="doGPS()">🔄</button>
           </div>
-          <div id="gpsStatus" style="font-size:11px;color:var(--text3);margin-top:4px;"></div>
-          <input type="hidden" id="vLat"><input type="hidden" id="vLng">
+          <input type="hidden" id="D_lat"><input type="hidden" id="D_lng">
+          <div class="gps-hint" id="D_gps_hint" style="color:var(--text3)">Location will be fetched automatically</div>
         </div>
       </div>
     </div>
 
-    <!-- MERCHANDISER & STORE -->
+    <!-- 2. MERCHANDISER & STORE -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">🏪</div><div><div class="title">Merchandiser & Store</div><div class="sub">City & state fill automatically</div></div></div>
+      <div class="card-head"><div class="ci">🏪</div><div><div class="ct">Merchandiser & Store</div><div class="cs">City & state fill automatically on store selection</div></div></div>
       <div class="card-body">
-        <div class="field">
-          <label>Merchandiser Name <span class="req">*</span></label>
-          <select id="merc" onchange="onMerc()">
-            <option value="">Select name</option>
-            <option>Amit</option><option>Amol</option><option>Bharath</option><option>Dev</option>
-            <option>Harsali</option><option>Kiran</option><option>Sagar</option>
-            <option>Subhankar Sengupta</option><option>Others</option>
+        <div class="f">
+          <label>Your Name <span class="req">*</span></label>
+          <select id="D_merc" onchange="onMerc()">
+            <option value="">-- Select your name --</option>
+            <option value="Amit">Amit</option>
+            <option value="Amol">Amol</option>
+            <option value="Bharath">Bharath</option>
+            <option value="Dev">Dev</option>
+            <option value="Harsali">Harsali</option>
+            <option value="Kiran">Kiran</option>
+            <option value="Sagar">Sagar</option>
+            <option value="Subhankar Sengupta">Subhankar Sengupta</option>
+            <option value="Others">Others</option>
           </select>
         </div>
-        <div class="field" id="mercOtherField" style="display:none">
-          <label>Your Name <span class="req">*</span></label>
-          <input type="text" id="mercOther" placeholder="Enter your name">
-        </div>
-        <div class="field">
+        <div class="f" id="mercOtherF" style="display:none"><label>Your Name <span class="req">*</span></label><input type="text" id="D_merc_other" placeholder="Type your name"></div>
+        <div class="f">
           <label>Store Name <span class="req">*</span></label>
-          <select id="store" onchange="onStore()"><option value="">Select merchandiser first</option></select>
+          <select id="D_store" onchange="onStore()"><option value="">-- Select name first --</option></select>
         </div>
-        <div class="field" id="storeOtherField" style="display:none">
-          <label>Store Name <span class="req">*</span></label>
-          <input type="text" id="storeOther" placeholder="Enter store name">
+        <div class="f" id="storeOtherF" style="display:none"><label>Store Name <span class="req">*</span></label><input type="text" id="D_store_other" placeholder="Type store name"></div>
+        <div class="f"><label>Store Code</label><input type="text" id="D_code" readonly placeholder="Auto-filled"></div>
+        <div class="row2">
+          <div class="f"><label>City <span class="req">*</span></label><input type="text" id="D_city" readonly placeholder="Auto-filled"></div>
+          <div class="f"><label>State <span class="req">*</span></label><input type="text" id="D_state" readonly placeholder="Auto-filled"></div>
         </div>
-        <div class="field">
-          <label>Store Code</label>
-          <input type="text" id="storeCode" readonly placeholder="Auto-filled">
-        </div>
-        <div class="grid2">
-          <div class="field">
-            <label>City <span class="req">*</span></label>
-            <input type="text" id="city" readonly placeholder="Auto-filled">
-          </div>
-          <div class="field">
-            <label>State <span class="req">*</span></label>
-            <input type="text" id="state" readonly placeholder="Auto-filled">
-          </div>
-        </div>
-        <div id="cityStateOther" style="display:none">
-          <div class="grid2">
-            <div class="field">
-              <label>City <span class="req">*</span></label>
-              <input type="text" id="cityOther" placeholder="Enter city">
-            </div>
-            <div class="field">
-              <label>State <span class="req">*</span></label>
-              <input type="text" id="stateOther" placeholder="Enter state">
-            </div>
+        <div id="cityStateOtherF" style="display:none">
+          <div class="row2">
+            <div class="f"><label>City <span class="req">*</span></label><input type="text" id="D_city_other" placeholder="Enter city"></div>
+            <div class="f"><label>State <span class="req">*</span></label><input type="text" id="D_state_other" placeholder="Enter state"></div>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- STOCK AVAILABLE -->
+    <!-- 3. STOCK AVAILABLE -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">📊</div><div><div class="title">Stock Available</div><div class="sub">Is Open Secret stock available in this store?</div></div></div>
+      <div class="card-head"><div class="ci">📊</div><div><div class="ct">Stock Available?</div><div class="cs">Is Open Secret stock available in this store?</div></div></div>
       <div class="card-body">
-        <div class="field">
-          <label>Stock Available? <span class="req">*</span></label>
-          <div class="yn-wrap">
-            <button type="button" class="yn-btn" id="saYes" onclick="setStock('yes')">✓ Yes</button>
-            <button type="button" class="yn-btn" id="saNo" onclick="setStock('no')">✗ No</button>
+        <div class="f">
+          <label>Stock Available <span class="req">*</span></label>
+          <div class="yn">
+            <button type="button" class="yn-btn" id="sa_y" onclick="setVal('stock','Yes')">✓ Yes</button>
+            <button type="button" class="yn-btn" id="sa_n" onclick="setVal('stock','No')">✗ No</button>
           </div>
-          <input type="hidden" id="stockVal">
+          <input type="hidden" id="D_stock">
         </div>
       </div>
     </div>
 
-    <!-- SOH — shown only when stock = yes -->
-    <div class="card" id="sohCard" style="display:none">
-      <div class="card-hdr"><div class="icon">📦</div><div><div class="title">Stock on Hand (SOH)</div><div class="sub">Units currently on shelf</div></div></div>
+    <!-- 4. SOH (shown only if stock = Yes) -->
+    <div class="card" id="sohSection" style="display:none">
+      <div class="card-head"><div class="ci">📦</div><div><div class="ct">Stock on Hand (SOH)</div><div class="cs">Units currently on shelf</div></div></div>
       <div class="card-body">
-        <div class="sku-row"><div class="sku-name">Digestive Biscuit</div><input class="sku-num" type="number" id="soh1" min="0" placeholder="0" oninput="prog()"></div>
-        <div class="sku-row"><div class="sku-name">Jeera Biscuit</div><input class="sku-num" type="number" id="soh2" min="0" placeholder="0" oninput="prog()"></div>
-        <div class="sku-row"><div class="sku-name">Chocolate Biscuit</div><input class="sku-num" type="number" id="soh3" min="0" placeholder="0" oninput="prog()"></div>
-        <div class="sku-row"><div class="sku-name">Assorted Story Box</div><input class="sku-num" type="number" id="soh4" min="0" placeholder="0" oninput="prog()"></div>
+        <div class="sku-row"><div class="sku-label">Digestive Biscuit</div><input class="sku-input" type="number" id="D_s1" min="0" value="0"></div>
+        <div class="sku-row"><div class="sku-label">Jeera Biscuit</div><input class="sku-input" type="number" id="D_s2" min="0" value="0"></div>
+        <div class="sku-row"><div class="sku-label">Chocolate Biscuit</div><input class="sku-input" type="number" id="D_s3" min="0" value="0"></div>
+        <div class="sku-row"><div class="sku-label">Assorted Story Box</div><input class="sku-input" type="number" id="D_s4" min="0" value="0"></div>
       </div>
     </div>
 
-    <!-- PRICE -->
+    <!-- 5. PRICE -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">💰</div><div><div class="title">Price Tag</div><div class="sub">Is the price displayed correctly?</div></div></div>
+      <div class="card-head"><div class="ci">💰</div><div><div class="ct">Price Tag</div><div class="cs">Is price tag correct on shelf?</div></div></div>
       <div class="card-body">
-        <div class="field">
-          <label>Price Correct? <span class="req">*</span></label>
-          <div class="yn-wrap">
-            <button type="button" class="yn-btn" id="pyBtn" onclick="setYN('yes')">✓ Yes</button>
-            <button type="button" class="yn-btn" id="pnBtn" onclick="setYN('no')">✗ No</button>
+        <div class="f">
+          <label>Price Correct <span class="req">*</span></label>
+          <div class="yn">
+            <button type="button" class="yn-btn" id="pr_y" onclick="setVal('price','Yes')">✓ Yes</button>
+            <button type="button" class="yn-btn" id="pr_n" onclick="setVal('price','No')">✗ No</button>
           </div>
-          <input type="hidden" id="priceVal">
+          <input type="hidden" id="D_price">
         </div>
       </div>
     </div>
 
-    <!-- PHOTOS -->
-    <div class="card" id="photoCard">
-      <div class="card-hdr"><div class="icon">📷</div><div><div class="title" id="photoTitle">Proof Photos</div><div class="sub" id="photoSub">At least 1 photo required · Max 4</div></div></div>
+    <!-- 6. PHOTOS -->
+    <div class="card">
+      <div class="card-head"><div class="ci">📷</div><div><div class="ct">Proof Photos</div><div class="cs" id="photoSubtitle">At least 1 photo required · Max 4</div></div></div>
       <div class="card-body">
-        <input type="file" id="photoInputCam" accept="image/*" capture="environment" onchange="addPhoto(this)" style="display:none">
-        <input type="file" id="photoInputGal" accept="image/*" onchange="addPhoto(this)" style="display:none">
+        <input type="file" id="camInput" accept="image/*" capture="environment" style="display:none" onchange="addPhoto(this)">
+        <input type="file" id="galInput" accept="image/*" style="display:none" onchange="addPhoto(this)">
         <div class="photo-btns">
-          <button type="button" class="photo-btn cam" onclick="document.getElementById('photoInputCam').click()">📷 Camera</button>
-          <button type="button" class="photo-btn gal" onclick="document.getElementById('photoInputGal').click()">🖼 Gallery</button>
+          <button type="button" class="pbtn cam" onclick="document.getElementById('camInput').click()">📷 Camera</button>
+          <button type="button" class="pbtn gal" onclick="document.getElementById('galInput').click()">🖼 Gallery</button>
         </div>
-        <div class="photo-grid" id="photoGrid">
-          <div class="photo-slot" id="slot0"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 1</div><div class="slot-req">Required</div></div>
-          <div class="photo-slot" id="slot1"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 2</div></div>
-          <div class="photo-slot" id="slot2"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 3</div></div>
-          <div class="photo-slot" id="slot3"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 4</div></div>
-        </div>
-        <div class="photo-note" id="photoCount">0 / 4 photos added</div>
+        <div class="photo-grid" id="photoGrid"></div>
+        <div class="photo-count" id="photoCount">0 of 4 photos added</div>
       </div>
     </div>
 
-    <!-- VISIBILITY -->
+    <!-- 7. VISIBILITY -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">👁️</div><div><div class="title">Visibility</div><div class="sub">Shelf placement of product</div></div></div>
+      <div class="card-head"><div class="ci">👁️</div><div><div class="ct">Visibility</div><div class="cs">Shelf placement</div></div></div>
       <div class="card-body">
-        <div class="field">
+        <div class="f">
           <label>Shelf Position <span class="req">*</span></label>
-          <select id="vis" onchange="onVis()">
-            <option value="">Select shelf</option>
+          <select id="D_vis" onchange="onVis()">
+            <option value="">-- Select shelf --</option>
             <option>Shelf 1</option><option>Shelf 2</option><option>Shelf 3</option>
             <option>Shelf 4</option><option>Shelf 5</option><option>Others</option>
           </select>
         </div>
-        <div class="field" id="visOtherField" style="display:none">
-          <label>Specify Position</label>
-          <input type="text" id="visOther" placeholder="e.g. End cap, gondola...">
-        </div>
+        <div class="f" id="visOtherF" style="display:none"><label>Specify</label><input type="text" id="D_vis_other" placeholder="e.g. End cap"></div>
       </div>
     </div>
 
-    <!-- COMPLIANCE -->
+    <!-- 8. COMPLIANCE -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">✅</div><div><div class="title">Compliance</div><div class="sub">Planogram compliance status</div></div></div>
+      <div class="card-head"><div class="ci">✅</div><div><div class="ct">Compliance</div><div class="cs">Planogram compliance status</div></div></div>
       <div class="card-body">
-        <div class="field">
+        <div class="f">
           <label>Compliance Level <span class="req">*</span></label>
-          <select id="compliance" onchange="prog()">
-            <option value="">Select</option>
+          <select id="D_comp" onchange="upd()">
+            <option value="">-- Select --</option>
             <option>None</option>
             <option>Minor</option>
           </select>
         </div>
-        <div class="field">
+        <div class="f">
           <label>Remarks (optional)</label>
-          <input type="text" id="remarks" placeholder="Any observations...">
+          <input type="text" id="D_rem" placeholder="Any notes or observations...">
         </div>
       </div>
     </div>
 
-  </div>
+  </div><!-- /mainForm -->
 
-  <div id="success">
-    <div class="ok-icon">✅</div>
-    <div class="ok-title">Submitted!</div>
-    <div class="ok-sub" id="okMsg">SOH entry recorded successfully.</div>
-    <button class="again-btn" onclick="reset()">Submit Another Entry</button>
+  <!-- SUCCESS -->
+  <div id="suc">
+    <div class="si">✅</div>
+    <h2>Submitted!</h2>
+    <p id="sucMsg">SOH entry recorded successfully.</p>
+    <button onclick="doReset()">Submit Another</button>
   </div>
 </div>
 
-<div class="submit-bar"><button class="submit-btn" id="subBtn" onclick="doSubmit()">Submit SOH Entry →</button></div>
+<div class="footer"><button class="sub-btn" id="subBtn" onclick="doSubmit()">Submit SOH Entry →</button></div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4rzXg7GYSbLgvNqXqDPx9otN_gzvFYS9E24-IuDAMtH0RERYgSwHiY2IMSY_OPBJSaQ/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzqYgP1Nmscmgj43s7F1KjybIa1A28AZZOaR01UTKu8kHGOnjykDQw70BUtcgNzZO5bwA/exec';
 
 const STORES = {"Amit": [{"code": "6208", "name": "Almonte-Khardi Bypas", "city": "Pune", "state": "Maharashtra"}, {"code": "6209", "name": "Tain Sqr-Fatima Ngr", "city": "Pune", "state": "Maharashtra"}, {"code": "6219", "name": "AUNDH", "city": "Pune", "state": "Maharashtra"}, {"code": "6719", "name": "Erandwane", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAF", "name": "smart bazar-PUNE-AMANORA PARK-TOWN CENTER", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAG", "name": "smart bazar-PUNE-KOTHRUD-CITY PRIDE MUL", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAH", "name": "smart bazar-PUNE-KUMAR PACIFIC MALL", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAI", "name": "smart bazar-PUNE-PIMPRI-PREMIER PLAZA", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAJ", "name": "smart bazar-PUNE-VISHRANTWADI-ALANDI ROAD", "city": "Pune", "state": "Maharashtra"}, {"code": "TDE3", "name": "Undri", "city": "Pune", "state": "Maharashtra"}, {"code": "TGC1", "name": "Vision Flora Pimple Saudagar", "city": "Pune", "state": "Maharashtra"}, {"code": "TGL3", "name": "RRL Smart Kalate Bldg Wakad Pune", "city": "Pune", "state": "Maharashtra"}, {"code": "TKX8", "name": "Vishal Capital Chakan", "city": "Pune", "state": "Maharashtra"}, {"code": "TMN0", "name": "Smart Moshi", "city": "Pune", "state": "Maharashtra"}, {"code": "TNP8", "name": "Smart Manjri Budruk Pune", "city": "Pune", "state": "Maharashtra"}, {"code": "TOG7", "name": "Smart Platinum Towers Kharadi", "city": "Pune", "state": "Maharashtra"}, {"code": "TPT7", "name": "Smart Shantai City Center Talegaon", "city": "Pune", "state": "Maharashtra"}, {"code": "TX40", "name": "Elpro Chinchwad", "city": "Pune", "state": "Maharashtra"}, {"code": "TXQV", "name": "SmartNet Dr. Dayma Property", "city": "Pune", "state": "Maharashtra"}, {"code": "TZ53", "name": "One Mall", "city": "Pune", "state": "Maharashtra"}, {"code": "TZ55", "name": "Jagtap Property Pimple Gurav", "city": "Pune", "state": "Maharashtra"}], "Amol": [{"code": "3119", "name": "SB AGAR BAZAR", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6220", "name": "Phoenix Market City", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TI76", "name": "Chandra Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TM95", "name": "Sai Krupa Kharghar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TMZ9", "name": "Nisarg Greens Ambernath", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TOJ6", "name": "Smart R City Mall Ghatkopar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ59", "name": "Smart GoodLife Boisar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ60", "name": "Vertex Khadapada", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR00", "name": "smart bazar-DOMBIVILI-LODHA EXPERIA MALL", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4026", "name": "Bhopar Dombivli DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4019", "name": "Mulund DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4020", "name": "New Panvel DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4067", "name": "Chembur Central Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4048", "name": "Panvel Highway DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4016", "name": "Seawoods DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4017", "name": "Thane Garden Estate DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4040", "name": "Kanjurmarg Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4022", "name": "Airoli DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR07", "name": "smart bazar-NAVI MUMBAI-PANVEL-ORION MA", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR08", "name": "smart bazar-NAVI MUMBAI-SEAWOODS", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR22", "name": "HYPERCITY-NAVI MUMBAI-INORBIT MALLS", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "TCM3", "name": "Smart Sunteck Airoli", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "TFP9", "name": "Om Namah Shivay Karanjade", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR11", "name": "smart bazar-THANE-DAHISAR-THAKUR MALL", "city": "Thane", "state": "Maharashtra"}, {"code": "FR14", "name": "smart bazar-THANE-KALYAN-NETIVALI VILLA", "city": "Thane", "state": "Maharashtra"}, {"code": "T188", "name": "SMT MUM  Dombivali (W)", "city": "Thane", "state": "Maharashtra"}, {"code": "TAFW", "name": "Smart R Mall Thane", "city": "Thane", "state": "Maharashtra"}, {"code": "TAJF", "name": "Smart Badlapur West", "city": "Thane", "state": "Maharashtra"}, {"code": "TOM0", "name": "Korum Mall", "city": "Thane", "state": "Maharashtra"}, {"code": "TZ6V", "name": "SMT MH  Concept A", "city": "Thane", "state": "Maharashtra"}, {"code": "TZ6W", "name": "Smart Thanekar Palasia", "city": "Thane", "state": "Maharashtra"}, {"code": "FR15", "name": "smart bazar-THANE-VIVA CITY MALL", "city": "Thane", "state": "Maharashtra"}], "Bharath": [{"code": "6225", "name": "Vijaynagar TTMC", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR43", "name": "smart bazar-BENGALURU-VB COLONY-ED", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR44", "name": "smart bazar-BANGALURU-JPNAGAR 7TH PHASE", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR45", "name": "smart bazar-BANGALURU-BANSHANKARI-KATHR", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR47", "name": "smart bazar-BANGALURU-GATEWAY JAYANAGAR", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR48", "name": "smart bazar-BENGALURU-MALLESHWARAM", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR49", "name": "smart bazar-BENGALURU-RAJAJI NAGAR", "city": "Bangalore", "state": "Karnataka"}, {"code": "TD8B", "name": "SMT MKT KN Blr Shantinagar", "city": "Bangalore", "state": "Karnataka"}, {"code": "TFU5", "name": "Vikhyath K.R Puram", "city": "Bangalore", "state": "Karnataka"}, {"code": "TKN2", "name": "Chandapura", "city": "Bangalore", "state": "Karnataka"}, {"code": "TLI7", "name": "Smart Electronic city Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TR28", "name": "Shivananjaiah Malagala Rd", "city": "Bangalore", "state": "Karnataka"}, {"code": "5605", "name": "Bommasandra DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5606", "name": "Electronic City DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5625", "name": "Saroja Complex Banshankari BLR", "city": "Bangalore", "state": "Karnataka"}, {"code": "5601", "name": "Siddapura DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5721", "name": "Sira Tumakuru Karnataka DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5613", "name": "Hongasandra Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}], "Dev": [{"code": "FRCX", "name": "smart bazar-NEW DELHI-VASANT KUNJ-AMBIANCE MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "FRDE", "name": "FB-GHAZIABAD-SHIPRA MALL", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDH", "name": "smart bazar-GHAZIABAD-OPULENT MALL-ED", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDI", "name": "smart bazar-GHAZIABAD-MAHAGUN MALL-ED", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDJ", "name": "smart bazar-GHAZIABAD-ADITYA MALL", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "T913", "name": "Jaipuria", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "T915", "name": "Signature Street", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TH89", "name": "Aero Business Tower", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TH8K", "name": "SMT UP  Signature Street G", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TI77", "name": "Smart KW Delhi 6 Ghaziabad", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDF", "name": "smart bazar-NOIDA-MALL OF INDIA", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDK", "name": "smart bazar-NOIDA-GREAT INDIA PLACE", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDL", "name": "smart bazar-NOIDA-LOGIX CITY CENTER", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDM", "name": "smart bazar-NOIDA-GAUR CITY", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "T1CU", "name": "Smart Paras One 33-Noida", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "TH86", "name": "SMART Beta Plaza", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDB", "name": "smart bazar-NEW DELHI-KALKA-JI", "city": "New Delhi", "state": "Delhi"}, {"code": "6205", "name": "Crown Interiorz Mall", "city": "Faridabad", "state": "Haryana"}, {"code": "FRDD", "name": "FARIDABAD-GRAND MALL", "city": "Faridabad", "state": "Haryana"}], "Harsali": [{"code": "2620", "name": "Swadeshi-Chunabhatti", "city": "Mumbai", "state": "Maharashtra"}, {"code": "3104", "name": "RF SB Bandra", "city": "Mumbai", "state": "Maharashtra"}, {"code": "5518", "name": "Merchandising Centre", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6210", "name": "Central City Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6217", "name": "Acme Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6221", "name": "D Victoria Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6731", "name": "Super Gulmohar Plaza", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR03", "name": "smart bazar-MUMBAI-MALAD-INFINITY MALL", "city": "Mumbai", "state": "Maharashtra"}, {"code": "T0II", "name": "Smart T W Gardens Wadhwa Kandivali", "city": "Mumbai", "state": "Maharashtra"}, {"code": "T31K", "name": "Smart Bazaar  Ivory Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TA10", "name": "Kanchpara-Malad", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TF14", "name": "Centre Point", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ21", "name": "Santosh Nagar Goregaon", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TZT7", "name": "SB Smart Poonam Nagar Andheri", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR04", "name": "smart bazar-MUMBAI-MATUNGA-ERA HOUSE", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR06", "name": "smart bazar-MUMBAI-VILE PARLE-MONGIBAI ROAD", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4052", "name": "Andheri (E) Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4045", "name": "Virar (E) DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4021", "name": "Kandivli Mahavir Nagar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4018", "name": "Vasai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4036", "name": "Dahisar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4031", "name": "Virar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR10", "name": "smart bazar-THANE-BHAYANDER-MAXUS MALL", "city": "Thane", "state": "Maharashtra"}, {"code": "FR16", "name": "smart bazar-VASAI-DATTANI VILLAGE", "city": "Vasai", "state": "Maharashtra"}, {"code": "FR17", "name": "VIRAR-YASHWANT BUILDING", "city": "Virar", "state": "Maharashtra"}], "Kiran": [{"code": "6243", "name": "Super Vidyaranyanpur", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR40", "name": "smart bazar-BENGALURU-ROYAL MEENAKSHI M", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR42", "name": "FB-BENGALURU-SOUL SPACE SPIRIT (CENTRAL)", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR46", "name": "smart bazar-BANGALURU-HEsmart bazarAL-MARUTHI AR", "city": "Bangalore", "state": "Karnataka"}, {"code": "T9UC", "name": "SMT KR Hessarghatta Main Road Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TAJ2", "name": "Smart Kothanur", "city": "Bangalore", "state": "Karnataka"}, {"code": "TEC9", "name": "Smart Akshay Nagar Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TFY4", "name": "Bhartiya City Thanisandra", "city": "Bangalore", "state": "Karnataka"}, {"code": "TMZ6", "name": "Vignannagar", "city": "Bangalore", "state": "Karnataka"}, {"code": "TOD6", "name": "Smart NRI Layout Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TOD7", "name": "Smart HSR Layout Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TX88", "name": "Monarch Serenity", "city": "Bangalore", "state": "Karnataka"}, {"code": "5616", "name": "Ram Murthy Nagar Bangalore DMa", "city": "Bangalore", "state": "Karnataka"}, {"code": "5621", "name": "KHB Yelahanka Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "5608", "name": "Hennur Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5610", "name": "Kanakpura Road Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5631", "name": "Srigandha Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "6302", "name": "Hosur DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5603", "name": "SJR Sarjapur DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5633", "name": "Hoodi Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5604", "name": "Garuda Mall DMart", "city": "Bangalore", "state": "Karnataka"}], "Sagar": [{"code": "6239", "name": "Reliance Mall, Dwarka", "city": "Delhi", "state": "Delhi"}, {"code": "TL30", "name": "Vikaspuri", "city": "Delhi", "state": "Delhi"}, {"code": "TP06", "name": "SMART Aggarwal Prestige Mall", "city": "Delhi", "state": "Delhi"}, {"code": "TU21", "name": "G3S Mall Rohini", "city": "Delhi", "state": "Delhi"}, {"code": "TW11", "name": "Plot No. 579, Shivaji Marg, Najafgarh", "city": "Delhi", "state": "Delhi"}, {"code": "FRCS", "name": "smart bazar-NEW DELHI-ORCHARD ROAD MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "FRCW", "name": "FB-NEW DELHI-RAJENDRA PLACE MTRO STATION", "city": "New Delhi", "state": "Delhi"}, {"code": "FRDA", "name": "smart bazar-NEW DELHI-V3S MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "2364", "name": "Jharsa Road", "city": "Gurgaon", "state": "Haryana"}, {"code": "6701", "name": "DLF Mega Mall", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCO", "name": "smart bazar-GURGAON-AMBI MALL", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCP", "name": "smart bazar-GURGAON-OMAXE SOHNA ROAD-ED", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCQ", "name": "smart bazar-GURGAON-SAHARA MALL", "city": "Gurgaon", "state": "Haryana"}, {"code": "T971", "name": "Smart M3M Urbana Premium", "city": "Gurgaon", "state": "Haryana"}, {"code": "TC74", "name": "Iris Broadway", "city": "Gurgaon", "state": "Haryana"}, {"code": "TIX3", "name": "Aria Mall", "city": "Gurgaon", "state": "Haryana"}], "Subhankar Sengupta": [{"code": "2951", "name": "RRL Super Rosedale", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBT", "name": "smart bazar-KOLKATA-BIRATI", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBU", "name": "smart bazar-KOLKATA-DCN MALL-JESSORE ROAD", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBV", "name": "smart bazar-KOLKATA-HILAND PARK-THE MET", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBW", "name": "smart bazar-KOLKATA-JADAVPUR-ORBIT MALL", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCA", "name": "smart bazar-KOLKATA-RASHBEHARI AVENUE", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCB", "name": "smart bazar-KOLKATA-SALT LAKE", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCC", "name": "smart bazar-KOLKATA-SEALDAH", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCF", "name": "KOLKATA-V.I.P. ROAD", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCG", "name": "smart bazar-KOLKATA-WOOD SQUARE MALL-PARGANAS", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRLF", "name": "smart bazar-KOLKATA-KHIDERPOR", "city": "Kolkata", "state": "West Bengal"}, {"code": "T1C1", "name": "SMT WB  Shyamnagar K", "city": "Kolkata", "state": "West Bengal"}, {"code": "T1NA", "name": "Smart South  Planox Mall", "city": "Kolkata", "state": "West Bengal"}, {"code": "T60N", "name": "SMT WB Greenfield C", "city": "Kolkata", "state": "West Bengal"}, {"code": "TH92", "name": "RS Newtown Plaza Kolkata", "city": "Kolkata", "state": "West Bengal"}, {"code": "TIT6", "name": "RRL Smart Ghosh Para Road B", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMM5", "name": "Smart Behala", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMM6", "name": "Smart Garia", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMZ5", "name": "SMART Madhyamgram", "city": "Kolkata", "state": "West Bengal"}, {"code": "TR85", "name": "Oracle Realmark Narendrapur", "city": "Kolkata", "state": "West Bengal"}]};
 
-// Photos array — max 4
-let photos = [null, null, null, null]; // {dataURI, fileName} or null
-let stockAvailable = ''; // 'yes' or 'no'
+// Photo state
+let photos = []; // array of {dataURI, fileName}
 
-// Init
-const now = new Date();
-document.getElementById('vDate').value = now.toISOString().split('T')[0];
-document.getElementById('vTime').value = now.toTimeString().substring(0,5);
+// ── INIT ──────────────────────────────────────────────────────────
+window.addEventListener('load', function() {
+  setDateTime();
+  doGPS();
+  renderPhotoGrid();
+});
 
-// GPS — required
-function getGPS() {
-  const locEl = document.getElementById('vLoc');
-  const statusEl = document.getElementById('gpsStatus');
-  locEl.placeholder = 'Fetching location...';
-  statusEl.textContent = 'Getting your location...';
-  statusEl.style.color = 'var(--text3)';
+function setDateTime() {
+  try {
+    var now = new Date();
+    var y = now.getFullYear();
+    var mo = String(now.getMonth()+1).padStart(2,'0');
+    var d  = String(now.getDate()).padStart(2,'0');
+    var h  = String(now.getHours()).padStart(2,'0');
+    var mi = String(now.getMinutes()).padStart(2,'0');
+    document.getElementById('D_date').value = y+'-'+mo+'-'+d;
+    document.getElementById('D_time').value = h+':'+mi;
+  } catch(e) {}
+}
+
+// ── GPS ───────────────────────────────────────────────────────────
+function doGPS() {
+  var hint = document.getElementById('D_gps_hint');
+  var loc  = document.getElementById('D_loc');
+  hint.style.color = '#9C9A94';
+  hint.textContent = 'Getting location...';
+  loc.placeholder  = 'Fetching GPS...';
 
   if (!navigator.geolocation) {
-    locEl.placeholder = 'GPS not supported';
-    statusEl.textContent = 'Your browser does not support GPS.';
-    statusEl.style.color = 'var(--red)';
+    hint.textContent = 'GPS not supported on this device.';
+    hint.style.color = 'var(--red)';
     return;
   }
 
   navigator.geolocation.getCurrentPosition(
-    p => {
-      const lat = p.coords.latitude.toFixed(6), lng = p.coords.longitude.toFixed(6);
-      document.getElementById('vLat').value = lat;
-      document.getElementById('vLng').value = lng;
-      locEl.value = lat + ', ' + lng;
-      statusEl.textContent = '✓ Location captured (accuracy: ' + Math.round(p.coords.accuracy) + 'm)';
-      statusEl.style.color = 'var(--green)';
-      prog();
+    function(pos) {
+      var lat = pos.coords.latitude.toFixed(6);
+      var lng = pos.coords.longitude.toFixed(6);
+      document.getElementById('D_lat').value = lat;
+      document.getElementById('D_lng').value = lng;
+      loc.value = lat + ', ' + lng;
+      hint.textContent = '✓ Location captured (±' + Math.round(pos.coords.accuracy) + 'm)';
+      hint.style.color = 'var(--green)';
+      upd();
     },
-    err => {
-      locEl.value = '';
-      locEl.placeholder = 'Location unavailable';
-      let msg = 'Could not get location. ';
-      if (err.code === 1) msg += 'Please allow location permission in your browser settings, then tap Refresh.';
-      else if (err.code === 2) msg += 'GPS signal unavailable. Try moving outside and tap Refresh.';
-      else msg += 'Tap Refresh to try again.';
-      statusEl.textContent = msg;
-      statusEl.style.color = 'var(--red)';
-      prog();
+    function(err) {
+      document.getElementById('D_lat').value = '';
+      document.getElementById('D_lng').value = '';
+      loc.value = '';
+      if (err.code === 1) {
+        hint.textContent = '⚠ Location permission denied. Go to browser settings → allow location → tap 🔄';
+      } else if (err.code === 2) {
+        hint.textContent = '⚠ GPS unavailable. Move to open area and tap 🔄';
+      } else {
+        hint.textContent = '⚠ Location timed out. Tap 🔄 to retry.';
+      }
+      hint.style.color = 'var(--red)';
     },
     { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
   );
 }
-// Auto-fetch on load
-getGPS();
 
-// Merchandiser change
+// ── MERCHANDISER ─────────────────────────────────────────────────
 function onMerc() {
-  const val = document.getElementById('merc').value;
-  const isOther = val === 'Others';
-  document.getElementById('mercOtherField').style.display = isOther ? 'block' : 'none';
+  var val = document.getElementById('D_merc').value;
+  var isOther = val === 'Others';
 
-  const sel = document.getElementById('store');
-  sel.innerHTML = '<option value="">Select store</option>';
-  document.getElementById('storeCode').value = '';
-  document.getElementById('storeOtherField').style.display = 'none';
+  document.getElementById('mercOtherF').style.display = isOther ? 'block' : 'none';
+  document.getElementById('cityStateOtherF').style.display = isOther ? 'block' : 'none';
 
-  // Hide city/state fields initially
-  document.getElementById('city').value = '';
-  document.getElementById('state').value = '';
-  document.getElementById('cityStateOther').style.display = isOther ? 'block' : 'none';
+  var sel = document.getElementById('D_store');
+  // Clear store dropdown
+  while (sel.options.length > 0) sel.remove(0);
 
-  if (!isOther && STORES[val]) {
-    const grouped = {};
-    STORES[val].forEach(s => {
-      if (!grouped[s.city]) grouped[s.city] = [];
-      grouped[s.city].push(s);
+  // Add default
+  var def = new Option(isOther ? '-- Enter store below --' : '-- Select store --', '');
+  sel.add(def);
+
+  document.getElementById('D_code').value  = '';
+  document.getElementById('D_city').value  = '';
+  document.getElementById('D_state').value = '';
+  document.getElementById('storeOtherF').style.display = 'none';
+
+  if (!isOther && val && STORES[val]) {
+    // Group by city
+    var grouped = {};
+    STORES[val].forEach(function(s) {
+      var c = s.city || 'Other';
+      if (!grouped[c]) grouped[c] = [];
+      grouped[c].push(s);
     });
-    Object.entries(grouped).forEach(([city, stores]) => {
-      const og = document.createElement('optgroup');
+
+    Object.keys(grouped).sort().forEach(function(city) {
+      var og = document.createElement('optgroup');
       og.label = city;
-      stores.forEach(s => {
-        const o = document.createElement('option');
-        o.value = JSON.stringify(s);
-        o.textContent = s.name;
+      grouped[city].forEach(function(s) {
+        var o = new Option(s.name + ' (' + s.code + ')', JSON.stringify(s));
         og.appendChild(o);
       });
       sel.appendChild(og);
     });
   }
-  const oo = document.createElement('option');
-  oo.value = 'OTHERS';
-  oo.textContent = 'Others';
-  sel.appendChild(oo);
-  prog();
+
+  // Others option
+  var oo = new Option('Others', 'OTHERS');
+  sel.add(oo);
+  upd();
 }
 
-// Store change
+// ── STORE ─────────────────────────────────────────────────────────
 function onStore() {
-  const val = document.getElementById('store').value;
-  const isOther = val === 'OTHERS';
-  document.getElementById('storeOtherField').style.display = isOther ? 'block' : 'none';
+  var val = document.getElementById('D_store').value;
+  var isOther = val === 'OTHERS';
+
+  document.getElementById('storeOtherF').style.display = isOther ? 'block' : 'none';
 
   if (isOther) {
-    document.getElementById('storeCode').value = '';
-    document.getElementById('city').value = '';
-    document.getElementById('state').value = '';
-    document.getElementById('cityStateOther').style.display = 'block';
+    document.getElementById('D_code').value  = '';
+    document.getElementById('D_city').value  = '';
+    document.getElementById('D_state').value = '';
+    document.getElementById('cityStateOtherF').style.display = 'block';
   } else if (val) {
     try {
-      const s = JSON.parse(val);
-      document.getElementById('storeCode').value = s.code;
-      document.getElementById('city').value = s.city;
-      document.getElementById('state').value = s.state;
-      document.getElementById('cityStateOther').style.display = 'none';
+      var s = JSON.parse(val);
+      document.getElementById('D_code').value  = s.code  || '';
+      document.getElementById('D_city').value  = s.city  || '';
+      document.getElementById('D_state').value = s.state || '';
+      document.getElementById('cityStateOtherF').style.display = 'none';
     } catch(e) {}
   } else {
-    document.getElementById('storeCode').value = '';
-    document.getElementById('city').value = '';
-    document.getElementById('state').value = '';
+    document.getElementById('D_code').value  = '';
+    document.getElementById('D_city').value  = '';
+    document.getElementById('D_state').value = '';
   }
-  prog();
+  upd();
 }
 
-// Stock available
-function setStock(v) {
-  stockAvailable = v;
-  document.getElementById('saYes').className = 'yn-btn' + (v==='yes'?' yes':'');
-  document.getElementById('saNo').className  = 'yn-btn' + (v==='no'?' no':'');
-  document.getElementById('stockVal').value  = v === 'yes' ? 'Yes' : 'No';
-  document.getElementById('sohCard').style.display = v === 'yes' ? 'block' : 'none';
-  // Photo compulsory only if stock available
-  updatePhotoRequirement();
-  prog();
-}
+// ── Y/N BUTTONS ───────────────────────────────────────────────────
+function setVal(field, val) {
+  if (field === 'stock') {
+    document.getElementById('sa_y').className = 'yn-btn' + (val==='Yes' ? ' Y' : '');
+    document.getElementById('sa_n').className = 'yn-btn' + (val==='No'  ? ' N' : '');
+    document.getElementById('D_stock').value  = val;
+    document.getElementById('sohSection').style.display = val === 'Yes' ? 'block' : 'none';
 
-function updatePhotoRequirement() {
-  const sub = document.getElementById('photoSub');
-  const req = document.getElementById('slot0').querySelector('.slot-req');
-  if (stockAvailable === 'yes') {
-    sub.textContent = 'At least 1 photo required · Max 4';
-    if(req) req.style.display = 'block';
-  } else {
-    sub.textContent = 'Optional · Max 4 photos';
-    if(req) req.style.display = 'none';
+  } else if (field === 'price') {
+    document.getElementById('pr_y').className = 'yn-btn' + (val==='Yes' ? ' Y' : '');
+    document.getElementById('pr_n').className = 'yn-btn' + (val==='No'  ? ' N' : '');
+    document.getElementById('D_price').value  = val;
   }
+  upd();
 }
 
-// Price Y/N
-function setYN(v) {
-  document.getElementById('pyBtn').className = 'yn-btn' + (v==='yes'?' yes':'');
-  document.getElementById('pnBtn').className = 'yn-btn' + (v==='no'?' no':'');
-  document.getElementById('priceVal').value  = v === 'yes' ? 'Yes' : 'No';
-  prog();
-}
-
-// Visibility
 function onVis() {
-  document.getElementById('visOtherField').style.display =
-    document.getElementById('vis').value === 'Others' ? 'block' : 'none';
-  prog();
+  document.getElementById('visOtherF').style.display =
+    document.getElementById('D_vis').value === 'Others' ? 'block' : 'none';
+  upd();
 }
 
-// Photos
+// ── PHOTOS ────────────────────────────────────────────────────────
 function addPhoto(input) {
-  const file = input.files[0];
+  var file = input.files[0];
   if (!file) return;
-  if (file.size > 10 * 1024 * 1024) { showErr('Photo too large. Max 10MB.'); return; }
-
-  // Find first empty slot
-  const slot = photos.indexOf(null);
-  if (slot === -1) { showErr('Maximum 4 photos already added.'); return; }
-
-  const reader = new FileReader();
-  reader.onload = e => {
-    photos[slot] = { dataURI: e.target.result, fileName: file.name };
+  if (photos.length >= 4) { showErr('Maximum 4 photos allowed.'); return; }
+  if (file.size > 10*1024*1024) { showErr('Photo too large. Max 10MB.'); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    photos.push({ dataURI: e.target.result, fileName: file.name });
     renderPhotoGrid();
-    prog();
+    upd();
   };
   reader.readAsDataURL(file);
-  input.value = ''; // reset so same file can be re-selected
+  input.value = '';
 }
 
-function removePhoto(slot) {
-  photos[slot] = null;
-  // Compact — shift photos left
-  const compact = photos.filter(p => p !== null);
-  photos = [...compact, ...Array(4 - compact.length).fill(null)];
+function removePhoto(i) {
+  photos.splice(i, 1);
   renderPhotoGrid();
-  prog();
+  upd();
 }
 
 function renderPhotoGrid() {
-  const count = photos.filter(p => p !== null).length;
-  document.getElementById('photoCount').textContent = count + ' / 4 photos added';
+  var grid = document.getElementById('photoGrid');
+  grid.innerHTML = '';
+  var count = photos.length;
 
-  for (let i = 0; i < 4; i++) {
-    const slot = document.getElementById('slot' + i);
-    if (photos[i]) {
-      slot.innerHTML = \`<img src="\${photos[i].dataURI}" alt="Photo \${i+1}"><button class="remove-btn" onclick="removePhoto(\${i})">✕</button>\`;
-      slot.classList.add('filled');
-      slot.classList.remove('required-empty');
-      slot.onclick = null;
-    } else {
-      const isReq = i === 0 && stockAvailable === 'yes';
-      slot.innerHTML = \`<div class="slot-icon">➕</div><div class="slot-lbl">Photo \${i+1}</div>\${isReq ? '<div class="slot-req">Required</div>' : ''}\`;
-      slot.className = 'photo-slot';
-      slot.onclick = () => document.getElementById('photoInputCam').click();
-    }
+  // Show filled slots
+  for (var i = 0; i < count; i++) {
+    (function(idx) {
+      var slot = document.createElement('div');
+      slot.className = 'pslot ok';
+      var img = document.createElement('img');
+      img.src = photos[idx].dataURI;
+      var btn = document.createElement('button');
+      btn.className = 'px';
+      btn.type = 'button';
+      btn.textContent = '✕';
+      btn.onclick = function(e) { e.stopPropagation(); removePhoto(idx); };
+      slot.appendChild(img);
+      slot.appendChild(btn);
+      grid.appendChild(slot);
+    })(i);
   }
+
+  // Show empty slots up to 4
+  for (var j = count; j < 4; j++) {
+    var slot = document.createElement('div');
+    slot.className = 'pslot';
+    slot.onclick = function() { document.getElementById('camInput').click(); };
+    var icon = document.createElement('div'); icon.className = 'pi'; icon.textContent = '➕';
+    var lbl  = document.createElement('div'); lbl.className = 'pl'; lbl.textContent = 'Photo ' + (j+1);
+    slot.appendChild(icon);
+    slot.appendChild(lbl);
+    if (j === 0) {
+      var req = document.createElement('div'); req.className = 'pr'; req.textContent = 'Tap to add';
+      slot.appendChild(req);
+    }
+    grid.appendChild(slot);
+  }
+
+  document.getElementById('photoCount').textContent = count + ' of 4 photos added';
 }
 
-// Progress
-function prog() {
-  let n = 0, total = 6;
-  if (document.getElementById('merc').value) n++;
-  if (document.getElementById('store').value) n++;
-  if (document.getElementById('stockVal').value) n++;
-  if (document.getElementById('priceVal').value) n++;
-  if (document.getElementById('vis').value) n++;
-  if (document.getElementById('compliance').value) n++;
-  document.getElementById('prog').style.width = Math.round(n / total * 100) + '%';
+// ── PROGRESS ──────────────────────────────────────────────────────
+function upd() {
+  var score = 0, total = 6;
+  if (document.getElementById('D_merc').value)  score++;
+  if (document.getElementById('D_store').value) score++;
+  if (document.getElementById('D_stock').value) score++;
+  if (document.getElementById('D_price').value) score++;
+  if (document.getElementById('D_vis').value)   score++;
+  if (document.getElementById('D_comp').value)  score++;
+  document.getElementById('pb').style.width = Math.round(score/total*100) + '%';
 }
 
-function gv(id) { return (document.getElementById(id)||{}).value||''; }
-function gn(id) { return parseInt(gv(id))||0; }
+// ── HELPERS ───────────────────────────────────────────────────────
+function gv(id) { var el = document.getElementById(id); return el ? el.value.trim() : ''; }
+function gn(id) { return parseInt(gv(id)) || 0; }
 function showErr(msg) {
-  const b = document.getElementById('err');
-  b.textContent = msg; b.classList.add('show');
-  b.scrollIntoView({behavior:'smooth',block:'center'});
-  setTimeout(() => b.classList.remove('show'), 5000);
+  var em = document.getElementById('em');
+  em.textContent = msg;
+  em.className = 'errmsg on';
+  em.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  setTimeout(function() { em.className = 'errmsg'; }, 6000);
 }
 
+// ── SUBMIT ────────────────────────────────────────────────────────
 function doSubmit() {
-  const merc = gv('merc');
-  const mercFinal = merc === 'Others' ? gv('mercOther').trim() : merc;
-  const storeVal = gv('store');
-  const visSel = gv('vis');
-  const visFinal = visSel === 'Others' ? gv('visOther').trim() : visSel;
-  const isOtherStore = storeVal === 'OTHERS';
-  const isOtherMerc = merc === 'Others';
-  const cityFinal = isOtherStore || isOtherMerc ? gv('cityOther').trim() : gv('city');
-  const stateFinal = isOtherStore || isOtherMerc ? gv('stateOther').trim() : gv('state');
-  const photoCount = photos.filter(p => p !== null).length;
+  var merc      = gv('D_merc');
+  var mercFinal = merc === 'Others' ? gv('D_merc_other') : merc;
+  var storeVal  = gv('D_store');
+  var isOtherSt = storeVal === 'OTHERS';
+  var isOtherMc = merc === 'Others';
+  var visSel    = gv('D_vis');
+  var visFinal  = visSel === 'Others' ? gv('D_vis_other') : visSel;
+  var cityFinal  = (isOtherSt || isOtherMc) ? gv('D_city_other')  : gv('D_city');
+  var stateFinal = (isOtherSt || isOtherMc) ? gv('D_state_other') : gv('D_state');
+  var stockVal  = gv('D_stock');
+  var photoCount = photos.length;
 
-  if (!gv('vLat') || !gv('vLng')) { showErr('GPS location is required. Please enable location and wait for it to load.'); return; }
-  if (!mercFinal)              { showErr('Please select or enter your name.'); return; }
-  if (!storeVal)               { showErr('Please select a store.'); return; }
-  if (!gv('stockVal'))         { showErr('Please indicate if stock is available.'); return; }
-  if (!gv('priceVal'))         { showErr('Please indicate if price is correct.'); return; }
-  if (stockAvailable === 'yes' && photoCount === 0) { showErr('At least 1 photo is required when stock is available.'); return; }
-  if (!visFinal)               { showErr('Please select shelf visibility.'); return; }
-  if (!gv('compliance'))       { showErr('Please select compliance level.'); return; }
+  if (!gv('D_lat')) { showErr('GPS location is required. Tap 🔄 to get location.'); return; }
+  if (!mercFinal)   { showErr('Please select or enter your name.'); return; }
+  if (!storeVal)    { showErr('Please select a store.'); return; }
+  if (!stockVal)    { showErr('Please indicate if stock is available.'); return; }
+  if (!gv('D_price')) { showErr('Please indicate if price is correct.'); return; }
+  if (photoCount === 0) { showErr('At least 1 photo is required.'); return; }
+  if (!visFinal)    { showErr('Please select shelf visibility.'); return; }
+  if (!gv('D_comp')) { showErr('Please select compliance level.'); return; }
 
-  let storeName, storeCode;
-  if (isOtherStore) { storeName = gv('storeOther') || 'Others'; storeCode = 'OTHER'; }
-  else { try { const s = JSON.parse(storeVal); storeName = s.name; storeCode = s.code; } catch(e) { storeName = storeVal; storeCode = ''; } }
+  var storeName, storeCode;
+  if (isOtherSt) {
+    storeName = gv('D_store_other') || 'Others';
+    storeCode = 'OTHER';
+  } else {
+    try { var s = JSON.parse(storeVal); storeName = s.name; storeCode = s.code; }
+    catch(e) { storeName = storeVal; storeCode = ''; }
+  }
 
-  const payload = {
-    date: gv('vDate'),
-    time: gv('vTime') || new Date().toTimeString().substring(0,5),
-    lat: gv('vLat'), lng: gv('vLng'),
+  var payload = {
+    date: gv('D_date'), time: gv('D_time'),
+    lat: gv('D_lat'), lng: gv('D_lng'),
     merchandiser: mercFinal,
-    storeName, storeCode,
+    storeName: storeName, storeCode: storeCode,
     city: cityFinal, state: stateFinal,
-    stockAvailable: gv('stockVal'),
-    soh_digestive: gn('soh1'), soh_jeera: gn('soh2'),
-    soh_choco: gn('soh3'), soh_assorted: gn('soh4'),
-    priceCorrect: gv('priceVal'),
-    // Photos — send as array
-    photos: photos.filter(p=>p!==null).map(p=>({fileData: p.dataURI, fileName: p.fileName})),
+    stockAvailable: stockVal,
+    soh_digestive: gn('D_s1'), soh_jeera: gn('D_s2'),
+    soh_choco: gn('D_s3'), soh_assorted: gn('D_s4'),
+    priceCorrect: gv('D_price'),
+    photos: photos.map(function(p) { return { fileData: p.dataURI, fileName: p.fileName }; }),
     visibility: visFinal,
-    compliance: gv('compliance'),
-    remarks: gv('remarks')
+    compliance: gv('D_comp'),
+    remarks: gv('D_rem')
   };
 
-  document.getElementById('overlay').classList.add('show');
+  document.getElementById('ov').className = 'on';
   document.getElementById('subBtn').disabled = true;
 
   fetch(SCRIPT_URL, { method: 'POST', body: JSON.stringify(payload) })
-    .then(r => r.json())
-    .then(d => {
-      document.getElementById('overlay').classList.remove('show');
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      document.getElementById('ov').className = '';
       if (d.status === 'success') {
-        document.getElementById('form').style.display = 'none';
-        document.getElementById('success').style.display = 'block';
-        document.querySelector('.submit-bar').style.display = 'none';
-        document.getElementById('okMsg').textContent = 'SOH for ' + storeName + ' saved. ID: ' + (d.id||'—');
+        document.getElementById('mainForm').style.display = 'none';
+        document.querySelector('.footer').style.display   = 'none';
+        document.getElementById('suc').style.display      = 'block';
+        document.getElementById('sucMsg').textContent     = 'SOH for ' + storeName + ' saved. ID: ' + (d.id || '—');
       } else {
         document.getElementById('subBtn').disabled = false;
-        showErr('Error: ' + (d.message||'Unknown error. Try again.'));
+        showErr('Error: ' + (d.message || 'Unknown error. Try again.'));
       }
     })
-    .catch(() => {
-      document.getElementById('overlay').classList.remove('show');
+    .catch(function() {
+      document.getElementById('ov').className = '';
       document.getElementById('subBtn').disabled = false;
       showErr('Network error. Check your connection and try again.');
     });
 }
 
-function reset() {
-  document.getElementById('form').style.display = 'block';
-  document.getElementById('success').style.display = 'none';
-  document.querySelector('.submit-bar').style.display = 'block';
-  document.getElementById('subBtn').disabled = false;
-  document.querySelectorAll('input:not([readonly]):not([type=hidden])').forEach(el => el.value = '');
-  document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
-  document.getElementById('storeCode').value = '';
-  document.getElementById('city').value = '';
-  document.getElementById('state').value = '';
-  document.getElementById('priceVal').value = '';
-  document.getElementById('stockVal').value = '';
-  document.getElementById('mercOtherField').style.display = 'none';
-  document.getElementById('storeOtherField').style.display = 'none';
-  document.getElementById('visOtherField').style.display = 'none';
-  document.getElementById('cityStateOther').style.display = 'none';
-  document.getElementById('sohCard').style.display = 'none';
-  document.getElementById('store').innerHTML = '<option value="">Select merchandiser first</option>';
-  document.getElementById('pyBtn').className = 'yn-btn';
-  document.getElementById('pnBtn').className = 'yn-btn';
-  document.getElementById('saYes').className = 'yn-btn';
-  document.getElementById('saNo').className = 'yn-btn';
-  document.getElementById('err').classList.remove('show');
-  photos = [null, null, null, null];
-  stockAvailable = '';
+// ── RESET ─────────────────────────────────────────────────────────
+function doReset() {
+  document.getElementById('mainForm').style.display = 'block';
+  document.getElementById('suc').style.display      = 'none';
+  document.querySelector('.footer').style.display   = 'block';
+  document.getElementById('subBtn').disabled        = false;
+
+  // Clear all inputs and selects
+  document.querySelectorAll('input:not([type=hidden])').forEach(function(el) {
+    if (!el.readOnly) el.value = '';
+    else el.value = '';
+  });
+  document.querySelectorAll('select').forEach(function(el) { el.selectedIndex = 0; });
+  document.getElementById('D_code').value  = '';
+  document.getElementById('D_city').value  = '';
+  document.getElementById('D_state').value = '';
+  document.getElementById('D_stock').value = '';
+  document.getElementById('D_price').value = '';
+
+  // Reset buttons
+  ['sa_y','sa_n','pr_y','pr_n'].forEach(function(id) {
+    document.getElementById(id).className = 'yn-btn';
+  });
+
+  // Hide conditional sections
+  document.getElementById('mercOtherF').style.display      = 'none';
+  document.getElementById('storeOtherF').style.display     = 'none';
+  document.getElementById('visOtherF').style.display       = 'none';
+  document.getElementById('cityStateOtherF').style.display = 'none';
+  document.getElementById('sohSection').style.display      = 'none';
+  document.getElementById('D_store').innerHTML             = '<option value="">-- Select name first --</option>';
+  document.getElementById('D_gps_hint').textContent        = 'Location will be fetched automatically';
+  document.getElementById('D_gps_hint').style.color        = '#9C9A94';
+
+  photos = [];
   renderPhotoGrid();
-  const n = new Date();
-  document.getElementById('vDate').value = n.toISOString().split('T')[0];
-  document.getElementById('vTime').value = n.toTimeString().substring(0,5);
-  document.getElementById('prog').style.width = '0%';
-  window.scrollTo(0,0);
-  getGPS();
+  document.getElementById('pb').style.width = '0%';
+  document.getElementById('em').className   = 'errmsg';
+  window.scrollTo(0, 0);
+  setDateTime();
+  doGPS();
 }
 </script>
 </body>
