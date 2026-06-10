@@ -103,7 +103,11 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
         </div>
         <div class="field">
           <label>GPS Location <span class="req">*</span> <span class="auto-tag">Auto</span></label>
-          <input type="text" id="vLoc" readonly placeholder="Fetching GPS...">
+          <div style="display:flex;gap:8px;align-items:center;">
+            <input type="text" id="vLoc" readonly placeholder="Tap Refresh to get location" style="flex:1;">
+            <button type="button" onclick="getGPS()" style="padding:11px 14px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;font-family:'DM Sans',sans-serif;">🔄 Refresh</button>
+          </div>
+          <div id="gpsStatus" style="font-size:11px;color:var(--text3);margin-top:4px;"></div>
           <input type="hidden" id="vLat"><input type="hidden" id="vLng">
         </div>
       </div>
@@ -290,25 +294,44 @@ document.getElementById('vTime').value = now.toTimeString().substring(0,5);
 
 // GPS — required
 function getGPS() {
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(
-      p => {
-        const lat = p.coords.latitude.toFixed(6), lng = p.coords.longitude.toFixed(6);
-        document.getElementById('vLat').value = lat;
-        document.getElementById('vLng').value = lng;
-        document.getElementById('vLoc').value = lat + ', ' + lng;
-        prog();
-      },
-      err => {
-        document.getElementById('vLoc').value = 'Location unavailable — please enable GPS';
-        prog();
-      },
-      { enableHighAccuracy: true, timeout: 10000 }
-    );
-  } else {
-    document.getElementById('vLoc').value = 'GPS not supported';
+  const locEl = document.getElementById('vLoc');
+  const statusEl = document.getElementById('gpsStatus');
+  locEl.placeholder = 'Fetching location...';
+  statusEl.textContent = 'Getting your location...';
+  statusEl.style.color = 'var(--text3)';
+
+  if (!navigator.geolocation) {
+    locEl.placeholder = 'GPS not supported';
+    statusEl.textContent = 'Your browser does not support GPS.';
+    statusEl.style.color = 'var(--red)';
+    return;
   }
+
+  navigator.geolocation.getCurrentPosition(
+    p => {
+      const lat = p.coords.latitude.toFixed(6), lng = p.coords.longitude.toFixed(6);
+      document.getElementById('vLat').value = lat;
+      document.getElementById('vLng').value = lng;
+      locEl.value = lat + ', ' + lng;
+      statusEl.textContent = '✓ Location captured (accuracy: ' + Math.round(p.coords.accuracy) + 'm)';
+      statusEl.style.color = 'var(--green)';
+      prog();
+    },
+    err => {
+      locEl.value = '';
+      locEl.placeholder = 'Location unavailable';
+      let msg = 'Could not get location. ';
+      if (err.code === 1) msg += 'Please allow location permission in your browser settings, then tap Refresh.';
+      else if (err.code === 2) msg += 'GPS signal unavailable. Try moving outside and tap Refresh.';
+      else msg += 'Tap Refresh to try again.';
+      statusEl.textContent = msg;
+      statusEl.style.color = 'var(--red)';
+      prog();
+    },
+    { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
+  );
 }
+// Auto-fetch on load
 getGPS();
 
 // Merchandiser change
