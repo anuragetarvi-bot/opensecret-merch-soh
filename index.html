@@ -48,15 +48,22 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
 .yn-btn{flex:1;padding:12px;border:1.5px solid var(--border);border-radius:var(--r-sm);font-size:14px;font-weight:500;cursor:pointer;background:#fff;color:var(--text2);transition:all 0.15s;font-family:"DM Sans",sans-serif;text-align:center;}
 .yn-btn.yes{border-color:var(--green);background:var(--green-bg);color:var(--green);}
 .yn-btn.no{border-color:var(--red);background:var(--red-bg);color:var(--red);}
-.photo-area{border:1.5px dashed var(--border);border-radius:var(--r-sm);padding:20px;text-align:center;cursor:pointer;transition:all 0.15s;background:#FAFAF8;}
-.photo-area:hover{border-color:var(--accent2);}
-.photo-area.has-photo{border-color:var(--green);background:var(--green-bg);}
-.photo-area input{display:none;}
-.photo-area .ph-icon{font-size:28px;margin-bottom:6px;}
-.photo-area .ph-lbl{font-size:13px;font-weight:500;color:var(--text2);}
-.photo-area .ph-sub{font-size:11px;color:var(--text3);margin-top:3px;}
-#photoPreview{width:100%;max-height:180px;object-fit:cover;border-radius:var(--r-sm);margin-top:10px;display:none;border:1px solid var(--border);}
-#photoName{font-size:12px;color:var(--green);margin-top:6px;display:none;font-family:"DM Mono",monospace;}
+/* PHOTOS */
+.photo-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:12px;}
+.photo-slot{border:1.5px dashed var(--border);border-radius:var(--r-sm);aspect-ratio:1;display:flex;flex-direction:column;align-items:center;justify-content:center;cursor:pointer;transition:all 0.15s;background:#FAFAF8;position:relative;overflow:hidden;}
+.photo-slot:hover{border-color:var(--accent2);}
+.photo-slot.filled{border-color:var(--green);border-style:solid;}
+.photo-slot.required-empty{border-color:var(--red);}
+.photo-slot img{width:100%;height:100%;object-fit:cover;border-radius:calc(var(--r-sm) - 2px);}
+.photo-slot .slot-icon{font-size:24px;margin-bottom:4px;}
+.photo-slot .slot-lbl{font-size:11px;color:var(--text3);}
+.photo-slot .slot-req{font-size:10px;color:var(--red);margin-top:2px;}
+.photo-slot .remove-btn{position:absolute;top:4px;right:4px;width:22px;height:22px;background:rgba(0,0,0,0.5);color:#fff;border:none;border-radius:50%;font-size:12px;cursor:pointer;display:flex;align-items:center;justify-content:center;line-height:1;}
+.photo-note{font-size:11px;color:var(--text2);text-align:center;}
+.photo-btns{display:flex;gap:8px;margin-bottom:10px;}
+.photo-btn{flex:1;padding:10px;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:13px;font-weight:600;cursor:pointer;}
+.photo-btn.cam{background:var(--accent);color:#fff;}
+.photo-btn.gal{background:var(--white);color:var(--accent);border:1.5px solid var(--accent);}
 .submit-bar{position:fixed;bottom:0;left:0;right:0;background:#fff;border-top:1px solid var(--border);padding:14px 16px;z-index:100;}
 .submit-btn{width:100%;padding:15px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-family:"DM Sans",sans-serif;font-size:16px;font-weight:600;cursor:pointer;transition:opacity 0.15s;}
 .submit-btn:active{opacity:0.85;}
@@ -75,7 +82,6 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
 </style>
 </head>
 <body>
-
 <header>
   <div class="logo">OS</div>
   <div><h1>Open Secret</h1><p>Merchandiser SOH Form</p></div>
@@ -87,7 +93,7 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
   <div id="form">
     <div class="err" id="err"></div>
 
-    <!-- VISIT -->
+    <!-- VISIT DETAILS -->
     <div class="card">
       <div class="card-hdr"><div class="icon">📋</div><div><div class="title">Visit Details</div><div class="sub">Auto-captures time & location</div></div></div>
       <div class="card-body">
@@ -96,7 +102,7 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
           <div class="field"><label>Time <span class="auto-tag">Auto</span></label><input type="time" id="vTime" readonly></div>
         </div>
         <div class="field">
-          <label>Location <span class="auto-tag">GPS</span></label>
+          <label>GPS Location <span class="req">*</span> <span class="auto-tag">Auto</span></label>
           <input type="text" id="vLoc" readonly placeholder="Fetching GPS...">
           <input type="hidden" id="vLat"><input type="hidden" id="vLng">
         </div>
@@ -105,7 +111,7 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
 
     <!-- MERCHANDISER & STORE -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">🏪</div><div><div class="title">Merchandiser & Store</div><div class="sub">Store code fills automatically</div></div></div>
+      <div class="card-hdr"><div class="icon">🏪</div><div><div class="title">Merchandiser & Store</div><div class="sub">City & state fill automatically</div></div></div>
       <div class="card-body">
         <div class="field">
           <label>Merchandiser Name <span class="req">*</span></label>
@@ -132,11 +138,48 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
           <label>Store Code</label>
           <input type="text" id="storeCode" readonly placeholder="Auto-filled">
         </div>
+        <div class="grid2">
+          <div class="field">
+            <label>City <span class="req">*</span></label>
+            <input type="text" id="city" readonly placeholder="Auto-filled">
+          </div>
+          <div class="field">
+            <label>State <span class="req">*</span></label>
+            <input type="text" id="state" readonly placeholder="Auto-filled">
+          </div>
+        </div>
+        <div id="cityStateOther" style="display:none">
+          <div class="grid2">
+            <div class="field">
+              <label>City <span class="req">*</span></label>
+              <input type="text" id="cityOther" placeholder="Enter city">
+            </div>
+            <div class="field">
+              <label>State <span class="req">*</span></label>
+              <input type="text" id="stateOther" placeholder="Enter state">
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- SOH -->
+    <!-- STOCK AVAILABLE -->
     <div class="card">
+      <div class="card-hdr"><div class="icon">📊</div><div><div class="title">Stock Available</div><div class="sub">Is Open Secret stock available in this store?</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Stock Available? <span class="req">*</span></label>
+          <div class="yn-wrap">
+            <button type="button" class="yn-btn" id="saYes" onclick="setStock('yes')">✓ Yes</button>
+            <button type="button" class="yn-btn" id="saNo" onclick="setStock('no')">✗ No</button>
+          </div>
+          <input type="hidden" id="stockVal">
+        </div>
+      </div>
+    </div>
+
+    <!-- SOH — shown only when stock = yes -->
+    <div class="card" id="sohCard" style="display:none">
       <div class="card-hdr"><div class="icon">📦</div><div><div class="title">Stock on Hand (SOH)</div><div class="sub">Units currently on shelf</div></div></div>
       <div class="card-body">
         <div class="sku-row"><div class="sku-name">Digestive Biscuit</div><input class="sku-num" type="number" id="soh1" min="0" placeholder="0" oninput="prog()"></div>
@@ -161,31 +204,29 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
       </div>
     </div>
 
-    <!-- PHOTO -->
-    <div class="card">
-      <div class="card-hdr"><div class="icon">📷</div><div><div class="title">Proof Photo</div><div class="sub">Saved to Google Drive</div></div></div>
+    <!-- PHOTOS -->
+    <div class="card" id="photoCard">
+      <div class="card-hdr"><div class="icon">📷</div><div><div class="title" id="photoTitle">Proof Photos</div><div class="sub" id="photoSub">At least 1 photo required · Max 4</div></div></div>
       <div class="card-body">
-        <div class="field">
-          <label>Upload Photo <span class="req">*</span></label>
-          <input type="file" id="photoInputCamera" accept="image/*" capture="environment" onchange="onPhoto(this)" style="display:none">
-          <input type="file" id="photoInputGallery" accept="image/*" onchange="onPhoto(this)" style="display:none">
-          <div class="photo-area" id="photoArea">
-            <div class="ph-icon">📸</div>
-            <div class="ph-lbl">Upload proof photo</div>
-            <div style="display:flex;gap:10px;justify-content:center;margin-top:12px;">
-              <button type="button" onclick="document.getElementById('photoInputCamera').click()" style="flex:1;padding:10px;background:var(--accent);color:#fff;border:none;border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">📷 Open Camera</button>
-              <button type="button" onclick="document.getElementById('photoInputGallery').click()" style="flex:1;padding:10px;background:var(--white);color:var(--accent);border:1.5px solid var(--accent);border-radius:var(--r-sm);font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;cursor:pointer;">🖼 Gallery</button>
-            </div>
-            <div class="ph-sub" style="margin-top:8px;">JPG or PNG · max 10MB</div>
-            <img id="photoPreview"><div id="photoName"></div>
-          </div>
+        <input type="file" id="photoInputCam" accept="image/*" capture="environment" onchange="addPhoto(this)" style="display:none">
+        <input type="file" id="photoInputGal" accept="image/*" onchange="addPhoto(this)" style="display:none">
+        <div class="photo-btns">
+          <button type="button" class="photo-btn cam" onclick="document.getElementById('photoInputCam').click()">📷 Camera</button>
+          <button type="button" class="photo-btn gal" onclick="document.getElementById('photoInputGal').click()">🖼 Gallery</button>
         </div>
+        <div class="photo-grid" id="photoGrid">
+          <div class="photo-slot" id="slot0"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 1</div><div class="slot-req">Required</div></div>
+          <div class="photo-slot" id="slot1"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 2</div></div>
+          <div class="photo-slot" id="slot2"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 3</div></div>
+          <div class="photo-slot" id="slot3"><div class="slot-icon">➕</div><div class="slot-lbl">Photo 4</div></div>
+        </div>
+        <div class="photo-note" id="photoCount">0 / 4 photos added</div>
       </div>
     </div>
 
     <!-- VISIBILITY -->
     <div class="card">
-      <div class="card-hdr"><div class="icon">👁️</div><div><div class="title">Visibility</div><div class="sub">Which shelf is product on?</div></div></div>
+      <div class="card-hdr"><div class="icon">👁️</div><div><div class="title">Visibility</div><div class="sub">Shelf placement of product</div></div></div>
       <div class="card-body">
         <div class="field">
           <label>Shelf Position <span class="req">*</span></label>
@@ -196,8 +237,23 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
           </select>
         </div>
         <div class="field" id="visOtherField" style="display:none">
-          <label>Specify</label>
+          <label>Specify Position</label>
           <input type="text" id="visOther" placeholder="e.g. End cap, gondola...">
+        </div>
+      </div>
+    </div>
+
+    <!-- COMPLIANCE -->
+    <div class="card">
+      <div class="card-hdr"><div class="icon">✅</div><div><div class="title">Compliance</div><div class="sub">Planogram compliance status</div></div></div>
+      <div class="card-body">
+        <div class="field">
+          <label>Compliance Level <span class="req">*</span></label>
+          <select id="compliance" onchange="prog()">
+            <option value="">Select</option>
+            <option>None</option>
+            <option>Minor</option>
+          </select>
         </div>
         <div class="field">
           <label>Remarks (optional)</label>
@@ -206,9 +262,8 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
       </div>
     </div>
 
-  </div><!-- /form -->
+  </div>
 
-  <!-- SUCCESS -->
   <div id="success">
     <div class="ok-icon">✅</div>
     <div class="ok-title">Submitted!</div>
@@ -220,41 +275,59 @@ header p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:1px;}
 <div class="submit-bar"><button class="submit-btn" id="subBtn" onclick="doSubmit()">Submit SOH Entry →</button></div>
 
 <script>
-const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxKJech6yNt3QAZiPa9IX0WKqurbZtVlp8i1601HVMn09g7ufXSrRod_5ELm-OJ795GPw/exec';
+const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbx4rzXg7GYSbLgvNqXqDPx9otN_gzvFYS9E24-IuDAMtH0RERYgSwHiY2IMSY_OPBJSaQ/exec';
 
-const STORES = {"Amit":[{"code":"6208","name":"Almonte-Khardi Bypas","city":"Pune"},{"code":"6209","name":"Tain Sqr-Fatima Ngr","city":"Pune"},{"code":"6219","name":"AUNDH","city":"Pune"},{"code":"6719","name":"Erandwane","city":"Pune"},{"code":"FRAF","name":"Smart Bazar Amanora Park","city":"Pune"},{"code":"FRAG","name":"Smart Bazar Kothrud City Pride","city":"Pune"},{"code":"FRAH","name":"Smart Bazar Kumar Pacific Mall","city":"Pune"},{"code":"FRAI","name":"Smart Bazar Pimpri Premier Plaza","city":"Pune"},{"code":"FRAJ","name":"Smart Bazar Vishrantwadi","city":"Pune"},{"code":"TDE3","name":"Undri","city":"Pune"},{"code":"TGC1","name":"Vision Flora Pimple Saudagar","city":"Pune"},{"code":"TGL3","name":"RRL Smart Wakad","city":"Pune"},{"code":"TKX8","name":"Vishal Capital Chakan","city":"Pune"},{"code":"TMN0","name":"Smart Moshi","city":"Pune"},{"code":"TNP8","name":"Smart Manjri Budruk","city":"Pune"},{"code":"TOG7","name":"Smart Platinum Towers Kharadi","city":"Pune"},{"code":"TPT7","name":"Smart Shantai Talegaon","city":"Pune"},{"code":"TX40","name":"Elpro Chinchwad","city":"Pune"},{"code":"TXQV","name":"SmartNet Dr Dayma Property","city":"Pune"},{"code":"TZ53","name":"One Mall","city":"Pune"},{"code":"TZ55","name":"Jagtap Property Pimple Gurav","city":"Pune"}],"Amol":[{"code":"3119","name":"SB Agar Bazar","city":"Mumbai"},{"code":"6220","name":"Phoenix Market City","city":"Mumbai"},{"code":"TI76","name":"Chandra Mall","city":"Mumbai"},{"code":"TMZ9","name":"Nisarg Greens Ambernath","city":"Mumbai"},{"code":"TOJ6","name":"Smart R City Mall Ghatkopar","city":"Mumbai"},{"code":"TQ59","name":"Smart GoodLife Boisar","city":"Mumbai"},{"code":"TQ60","name":"Vertex Khadapada","city":"Mumbai"},{"code":"FR00","name":"Smart Bazar Dombivli","city":"Mumbai"},{"code":"4026","name":"Bhopar Dombivli DMart","city":"Mumbai"},{"code":"4019","name":"Mulund DMart","city":"Mumbai"},{"code":"4067","name":"Chembur DMart","city":"Mumbai"},{"code":"4040","name":"Kanjurmarg DMart","city":"Mumbai"},{"code":"TM95","name":"Sai Krupa Kharghar","city":"Navi Mumbai"},{"code":"4020","name":"New Panvel DMart","city":"Navi Mumbai"},{"code":"4048","name":"Panvel Highway DMart","city":"Navi Mumbai"},{"code":"4016","name":"Seawoods DMart","city":"Navi Mumbai"},{"code":"4022","name":"Airoli DMart","city":"Navi Mumbai"},{"code":"FR07","name":"Smart Bazar Panvel Orion","city":"Navi Mumbai"},{"code":"FR08","name":"Smart Bazar Seawoods","city":"Navi Mumbai"},{"code":"FR22","name":"Hypercity Inorbit","city":"Navi Mumbai"},{"code":"TCM3","name":"Smart Sunteck Airoli","city":"Navi Mumbai"},{"code":"TFP9","name":"Om Namah Shivay Karanjade","city":"Navi Mumbai"},{"code":"4017","name":"Thane Garden Estate DMart","city":"Thane"},{"code":"FR11","name":"Smart Bazar Dahisar Thakur","city":"Thane"},{"code":"FR14","name":"Smart Bazar Kalyan Netivali","city":"Thane"},{"code":"T188","name":"SMT Dombivali West","city":"Thane"},{"code":"TAFW","name":"Smart R Mall Thane","city":"Thane"},{"code":"TAJF","name":"Smart Badlapur West","city":"Thane"},{"code":"TOM0","name":"Korum Mall","city":"Thane"},{"code":"TZ6V","name":"SMT Concept A Thane","city":"Thane"},{"code":"TZ6W","name":"Smart Thanekar Palasia","city":"Thane"},{"code":"FR15","name":"Smart Bazar Viva City Thane","city":"Thane"}],"Bharath":[{"code":"6225","name":"Vijaynagar TTMC","city":"Bangalore"},{"code":"FR43","name":"Smart Bazar VB Colony","city":"Bangalore"},{"code":"FR44","name":"Smart Bazar JP Nagar","city":"Bangalore"},{"code":"FR45","name":"Smart Bazar Banshankari","city":"Bangalore"},{"code":"FR47","name":"Smart Bazar Gateway Jayanagar","city":"Bangalore"},{"code":"FR48","name":"Smart Bazar Malleshwaram","city":"Bangalore"},{"code":"FR49","name":"Smart Bazar Rajaji Nagar","city":"Bangalore"},{"code":"TD8B","name":"SMT Shantinagar Bangalore","city":"Bangalore"},{"code":"TFU5","name":"Vikhyath KR Puram","city":"Bangalore"},{"code":"TKN2","name":"Chandapura","city":"Bangalore"},{"code":"TLI7","name":"Smart Electronic City","city":"Bangalore"},{"code":"TR28","name":"Shivananjaiah Malagala Rd","city":"Bangalore"},{"code":"5605","name":"Bommasandra DMart","city":"Bangalore"},{"code":"5606","name":"Electronic City DMart","city":"Bangalore"},{"code":"5625","name":"Saroja Complex Banshankari DMart","city":"Bangalore"},{"code":"5601","name":"Siddapura DMart","city":"Bangalore"},{"code":"5721","name":"Sira Tumakuru DMart","city":"Bangalore"},{"code":"5613","name":"Hongasandra DMart","city":"Bangalore"}],"Dev":[{"code":"FRCX","name":"Smart Bazar Vasant Kunj","city":"New Delhi"},{"code":"FRDB","name":"Smart Bazar Kalkaji","city":"New Delhi"},{"code":"6205","name":"Crown Interiorz Mall","city":"Faridabad"},{"code":"FRDD","name":"Faridabad Grand Mall","city":"Faridabad"},{"code":"FRDE","name":"Smart Bazar Shipra Mall","city":"Ghaziabad"},{"code":"FRDH","name":"Smart Bazar Opulent Mall","city":"Ghaziabad"},{"code":"FRDI","name":"Smart Bazar Mahagun Mall","city":"Ghaziabad"},{"code":"FRDJ","name":"Smart Bazar Aditya Mall","city":"Ghaziabad"},{"code":"T913","name":"Jaipuria","city":"Ghaziabad"},{"code":"T915","name":"Signature Street","city":"Ghaziabad"},{"code":"TH89","name":"Aero Business Tower","city":"Ghaziabad"},{"code":"TH8K","name":"SMT Signature Street G","city":"Ghaziabad"},{"code":"TI77","name":"Smart KW Delhi 6","city":"Ghaziabad"},{"code":"FRDF","name":"Smart Bazar Mall of India","city":"Noida"},{"code":"FRDK","name":"Smart Bazar Great India Place","city":"Noida"},{"code":"FRDL","name":"Smart Bazar Logix City","city":"Noida"},{"code":"FRDM","name":"Smart Bazar Gaur City","city":"Noida"},{"code":"T1CU","name":"Smart Paras One 33","city":"Noida"},{"code":"TH86","name":"SMART Beta Plaza","city":"Noida"}],"Harsali":[{"code":"2620","name":"Swadeshi Chunabhatti","city":"Mumbai"},{"code":"3104","name":"RF SB Bandra","city":"Mumbai"},{"code":"5518","name":"Merchandising Centre","city":"Mumbai"},{"code":"6210","name":"Central City Mall","city":"Mumbai"},{"code":"6217","name":"Acme Mall","city":"Mumbai"},{"code":"6221","name":"D Victoria Mall","city":"Mumbai"},{"code":"6731","name":"Super Gulmohar Plaza","city":"Mumbai"},{"code":"FR03","name":"Smart Bazar Malad Infinity","city":"Mumbai"},{"code":"T0II","name":"Smart TW Gardens Kandivali","city":"Mumbai"},{"code":"T31K","name":"Smart Bazaar Ivory Mall","city":"Mumbai"},{"code":"TA10","name":"Kanchpara Malad","city":"Mumbai"},{"code":"TF14","name":"Centre Point","city":"Mumbai"},{"code":"TQ21","name":"Santosh Nagar Goregaon","city":"Mumbai"},{"code":"TZT7","name":"SB Smart Poonam Nagar Andheri","city":"Mumbai"},{"code":"FR04","name":"Smart Bazar Matunga Era House","city":"Mumbai"},{"code":"FR06","name":"Smart Bazar Vile Parle","city":"Mumbai"},{"code":"4052","name":"Andheri (E) DMart","city":"Mumbai"},{"code":"4045","name":"Virar (E) DMart","city":"Mumbai"},{"code":"4021","name":"Kandivali DMart","city":"Mumbai"},{"code":"4018","name":"Vasai DMart","city":"Vasai"},{"code":"4036","name":"Dahisar DMart","city":"Mumbai"},{"code":"4031","name":"Virar DMart","city":"Virar"},{"code":"FR10","name":"Smart Bazar Bhayander Maxus","city":"Thane"},{"code":"FR16","name":"Smart Bazar Vasai Dattani","city":"Vasai"},{"code":"FR17","name":"Virar Yashwant Building","city":"Virar"}],"Kiran":[{"code":"6243","name":"Super Vidyaranyapura","city":"Bangalore"},{"code":"FR40","name":"Smart Bazar Royal Meenakshi","city":"Bangalore"},{"code":"FR42","name":"Smart Bazar Soul Space Bellandur","city":"Bangalore"},{"code":"FR46","name":"Smart Bazar Hesaraghatta","city":"Bangalore"},{"code":"T9UC","name":"SMT KR Hessarghatta Main Rd","city":"Bangalore"},{"code":"TAJ2","name":"Smart Kothanur","city":"Bangalore"},{"code":"TEC9","name":"Smart Akshay Nagar","city":"Bangalore"},{"code":"TFY4","name":"Bhartiya City Thanisandra","city":"Bangalore"},{"code":"TMZ6","name":"Vignananagar","city":"Bangalore"},{"code":"TOD6","name":"Smart NRI Layout","city":"Bangalore"},{"code":"TOD7","name":"Smart HSR Layout","city":"Bangalore"},{"code":"TX88","name":"Monarch Serenity","city":"Bangalore"},{"code":"5616","name":"Ram Murthy Nagar DMart","city":"Bangalore"},{"code":"5621","name":"KHB Yelahanka DMart","city":"Bangalore"},{"code":"5608","name":"Hennur DMart","city":"Bangalore"},{"code":"5610","name":"Kanakpura Road DMart","city":"Bangalore"},{"code":"5631","name":"Srigandha DMart","city":"Bangalore"},{"code":"6302","name":"Hosur DMart","city":"Bangalore"},{"code":"5603","name":"SJR Sarjapur DMart","city":"Bangalore"},{"code":"5633","name":"Hoodi DMart","city":"Bangalore"},{"code":"5604","name":"Garuda Mall DMart","city":"Bangalore"}],"Sagar":[{"code":"6239","name":"Reliance Mall Dwarka","city":"Delhi"},{"code":"TL30","name":"Vikaspuri","city":"Delhi"},{"code":"TP06","name":"SMART Aggarwal Prestige Mall","city":"Delhi"},{"code":"TU21","name":"G3S Mall Rohini","city":"Delhi"},{"code":"TW11","name":"Shivaji Marg Najafgarh","city":"Delhi"},{"code":"FRCS","name":"Smart Bazar Orchard Road Mall","city":"New Delhi"},{"code":"FRCW","name":"Smart Bazar Rajendra Place Metro","city":"New Delhi"},{"code":"FRDA","name":"Smart Bazar V3S Mall","city":"New Delhi"},{"code":"2364","name":"Jharsa Road","city":"Gurgaon"},{"code":"6701","name":"DLF Mega Mall","city":"Gurgaon"},{"code":"FRCO","name":"Smart Bazar Ambi Mall","city":"Gurgaon"},{"code":"FRCP","name":"Smart Bazar Omaxe Sohna Road","city":"Gurgaon"},{"code":"FRCQ","name":"Smart Bazar Sahara Mall","city":"Gurgaon"},{"code":"T971","name":"Smart M3M Urbana Premium","city":"Gurgaon"},{"code":"TC74","name":"Iris Broadway","city":"Gurgaon"},{"code":"TIX3","name":"Aria Mall","city":"Gurgaon"}],"Subhankar Sengupta":[{"code":"2951","name":"RRL Super Rosedale","city":"Kolkata"},{"code":"FRBT","name":"Smart Bazar Birati","city":"Kolkata"},{"code":"FRBU","name":"Smart Bazar DCN Mall Jessore Rd","city":"Kolkata"},{"code":"FRBV","name":"Smart Bazar Hiland Park","city":"Kolkata"},{"code":"FRBW","name":"Smart Bazar Jadavpur Orbit Mall","city":"Kolkata"},{"code":"FRCA","name":"Smart Bazar Rashbehari Avenue","city":"Kolkata"},{"code":"FRCB","name":"Smart Bazar Salt Lake","city":"Kolkata"},{"code":"FRCC","name":"Smart Bazar Sealdah","city":"Kolkata"},{"code":"FRCF","name":"Smart Bazar VIP Road","city":"Kolkata"},{"code":"FRCG","name":"Smart Bazar Wood Square Mall","city":"Kolkata"},{"code":"FRLF","name":"Smart Bazar Khiderpore","city":"Kolkata"},{"code":"T1C1","name":"SMT Shyamnagar","city":"Kolkata"},{"code":"T1NA","name":"Smart South Planox Mall","city":"Kolkata"},{"code":"T60N","name":"SMT Greenfield","city":"Kolkata"},{"code":"TH92","name":"RS Newtown Plaza","city":"Kolkata"},{"code":"TIT6","name":"RRL Smart Ghosh Para Road B","city":"Kolkata"},{"code":"TMM5","name":"Smart Behala","city":"Kolkata"},{"code":"TMM6","name":"Smart Garia","city":"Kolkata"},{"code":"TMZ5","name":"SMART Madhyamgram","city":"Kolkata"},{"code":"TR85","name":"Oracle Realmark Narendrapur","city":"Kolkata"}]};
+const STORES = {"Amit": [{"code": "6208", "name": "Almonte-Khardi Bypas", "city": "Pune", "state": "Maharashtra"}, {"code": "6209", "name": "Tain Sqr-Fatima Ngr", "city": "Pune", "state": "Maharashtra"}, {"code": "6219", "name": "AUNDH", "city": "Pune", "state": "Maharashtra"}, {"code": "6719", "name": "Erandwane", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAF", "name": "smart bazar-PUNE-AMANORA PARK-TOWN CENTER", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAG", "name": "smart bazar-PUNE-KOTHRUD-CITY PRIDE MUL", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAH", "name": "smart bazar-PUNE-KUMAR PACIFIC MALL", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAI", "name": "smart bazar-PUNE-PIMPRI-PREMIER PLAZA", "city": "Pune", "state": "Maharashtra"}, {"code": "FRAJ", "name": "smart bazar-PUNE-VISHRANTWADI-ALANDI ROAD", "city": "Pune", "state": "Maharashtra"}, {"code": "TDE3", "name": "Undri", "city": "Pune", "state": "Maharashtra"}, {"code": "TGC1", "name": "Vision Flora Pimple Saudagar", "city": "Pune", "state": "Maharashtra"}, {"code": "TGL3", "name": "RRL Smart Kalate Bldg Wakad Pune", "city": "Pune", "state": "Maharashtra"}, {"code": "TKX8", "name": "Vishal Capital Chakan", "city": "Pune", "state": "Maharashtra"}, {"code": "TMN0", "name": "Smart Moshi", "city": "Pune", "state": "Maharashtra"}, {"code": "TNP8", "name": "Smart Manjri Budruk Pune", "city": "Pune", "state": "Maharashtra"}, {"code": "TOG7", "name": "Smart Platinum Towers Kharadi", "city": "Pune", "state": "Maharashtra"}, {"code": "TPT7", "name": "Smart Shantai City Center Talegaon", "city": "Pune", "state": "Maharashtra"}, {"code": "TX40", "name": "Elpro Chinchwad", "city": "Pune", "state": "Maharashtra"}, {"code": "TXQV", "name": "SmartNet Dr. Dayma Property", "city": "Pune", "state": "Maharashtra"}, {"code": "TZ53", "name": "One Mall", "city": "Pune", "state": "Maharashtra"}, {"code": "TZ55", "name": "Jagtap Property Pimple Gurav", "city": "Pune", "state": "Maharashtra"}], "Amol": [{"code": "3119", "name": "SB AGAR BAZAR", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6220", "name": "Phoenix Market City", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TI76", "name": "Chandra Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TM95", "name": "Sai Krupa Kharghar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TMZ9", "name": "Nisarg Greens Ambernath", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TOJ6", "name": "Smart R City Mall Ghatkopar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ59", "name": "Smart GoodLife Boisar", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ60", "name": "Vertex Khadapada", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR00", "name": "smart bazar-DOMBIVILI-LODHA EXPERIA MALL", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4026", "name": "Bhopar Dombivli DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4019", "name": "Mulund DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4020", "name": "New Panvel DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4067", "name": "Chembur Central Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4048", "name": "Panvel Highway DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4016", "name": "Seawoods DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4017", "name": "Thane Garden Estate DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4040", "name": "Kanjurmarg Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4022", "name": "Airoli DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR07", "name": "smart bazar-NAVI MUMBAI-PANVEL-ORION MA", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR08", "name": "smart bazar-NAVI MUMBAI-SEAWOODS", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR22", "name": "HYPERCITY-NAVI MUMBAI-INORBIT MALLS", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "TCM3", "name": "Smart Sunteck Airoli", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "TFP9", "name": "Om Namah Shivay Karanjade", "city": "Navi Mumbai", "state": "Maharashtra"}, {"code": "FR11", "name": "smart bazar-THANE-DAHISAR-THAKUR MALL", "city": "Thane", "state": "Maharashtra"}, {"code": "FR14", "name": "smart bazar-THANE-KALYAN-NETIVALI VILLA", "city": "Thane", "state": "Maharashtra"}, {"code": "T188", "name": "SMT MUM  Dombivali (W)", "city": "Thane", "state": "Maharashtra"}, {"code": "TAFW", "name": "Smart R Mall Thane", "city": "Thane", "state": "Maharashtra"}, {"code": "TAJF", "name": "Smart Badlapur West", "city": "Thane", "state": "Maharashtra"}, {"code": "TOM0", "name": "Korum Mall", "city": "Thane", "state": "Maharashtra"}, {"code": "TZ6V", "name": "SMT MH  Concept A", "city": "Thane", "state": "Maharashtra"}, {"code": "TZ6W", "name": "Smart Thanekar Palasia", "city": "Thane", "state": "Maharashtra"}, {"code": "FR15", "name": "smart bazar-THANE-VIVA CITY MALL", "city": "Thane", "state": "Maharashtra"}], "Bharath": [{"code": "6225", "name": "Vijaynagar TTMC", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR43", "name": "smart bazar-BENGALURU-VB COLONY-ED", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR44", "name": "smart bazar-BANGALURU-JPNAGAR 7TH PHASE", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR45", "name": "smart bazar-BANGALURU-BANSHANKARI-KATHR", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR47", "name": "smart bazar-BANGALURU-GATEWAY JAYANAGAR", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR48", "name": "smart bazar-BENGALURU-MALLESHWARAM", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR49", "name": "smart bazar-BENGALURU-RAJAJI NAGAR", "city": "Bangalore", "state": "Karnataka"}, {"code": "TD8B", "name": "SMT MKT KN Blr Shantinagar", "city": "Bangalore", "state": "Karnataka"}, {"code": "TFU5", "name": "Vikhyath K.R Puram", "city": "Bangalore", "state": "Karnataka"}, {"code": "TKN2", "name": "Chandapura", "city": "Bangalore", "state": "Karnataka"}, {"code": "TLI7", "name": "Smart Electronic city Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TR28", "name": "Shivananjaiah Malagala Rd", "city": "Bangalore", "state": "Karnataka"}, {"code": "5605", "name": "Bommasandra DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5606", "name": "Electronic City DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5625", "name": "Saroja Complex Banshankari BLR", "city": "Bangalore", "state": "Karnataka"}, {"code": "5601", "name": "Siddapura DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5721", "name": "Sira Tumakuru Karnataka DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5613", "name": "Hongasandra Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}], "Dev": [{"code": "FRCX", "name": "smart bazar-NEW DELHI-VASANT KUNJ-AMBIANCE MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "FRDE", "name": "FB-GHAZIABAD-SHIPRA MALL", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDH", "name": "smart bazar-GHAZIABAD-OPULENT MALL-ED", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDI", "name": "smart bazar-GHAZIABAD-MAHAGUN MALL-ED", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDJ", "name": "smart bazar-GHAZIABAD-ADITYA MALL", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "T913", "name": "Jaipuria", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "T915", "name": "Signature Street", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TH89", "name": "Aero Business Tower", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TH8K", "name": "SMT UP  Signature Street G", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "TI77", "name": "Smart KW Delhi 6 Ghaziabad", "city": "Ghaziabad", "state": "Uttar Pradesh"}, {"code": "FRDF", "name": "smart bazar-NOIDA-MALL OF INDIA", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDK", "name": "smart bazar-NOIDA-GREAT INDIA PLACE", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDL", "name": "smart bazar-NOIDA-LOGIX CITY CENTER", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDM", "name": "smart bazar-NOIDA-GAUR CITY", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "T1CU", "name": "Smart Paras One 33-Noida", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "TH86", "name": "SMART Beta Plaza", "city": "Noida", "state": "Uttar Pradesh"}, {"code": "FRDB", "name": "smart bazar-NEW DELHI-KALKA-JI", "city": "New Delhi", "state": "Delhi"}, {"code": "6205", "name": "Crown Interiorz Mall", "city": "Faridabad", "state": "Haryana"}, {"code": "FRDD", "name": "FARIDABAD-GRAND MALL", "city": "Faridabad", "state": "Haryana"}], "Harsali": [{"code": "2620", "name": "Swadeshi-Chunabhatti", "city": "Mumbai", "state": "Maharashtra"}, {"code": "3104", "name": "RF SB Bandra", "city": "Mumbai", "state": "Maharashtra"}, {"code": "5518", "name": "Merchandising Centre", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6210", "name": "Central City Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6217", "name": "Acme Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6221", "name": "D Victoria Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "6731", "name": "Super Gulmohar Plaza", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR03", "name": "smart bazar-MUMBAI-MALAD-INFINITY MALL", "city": "Mumbai", "state": "Maharashtra"}, {"code": "T0II", "name": "Smart T W Gardens Wadhwa Kandivali", "city": "Mumbai", "state": "Maharashtra"}, {"code": "T31K", "name": "Smart Bazaar  Ivory Mall", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TA10", "name": "Kanchpara-Malad", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TF14", "name": "Centre Point", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TQ21", "name": "Santosh Nagar Goregaon", "city": "Mumbai", "state": "Maharashtra"}, {"code": "TZT7", "name": "SB Smart Poonam Nagar Andheri", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR04", "name": "smart bazar-MUMBAI-MATUNGA-ERA HOUSE", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR06", "name": "smart bazar-MUMBAI-VILE PARLE-MONGIBAI ROAD", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4052", "name": "Andheri (E) Mumbai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4045", "name": "Virar (E) DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4021", "name": "Kandivli Mahavir Nagar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4018", "name": "Vasai DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4036", "name": "Dahisar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "4031", "name": "Virar DMart", "city": "Mumbai", "state": "Maharashtra"}, {"code": "FR10", "name": "smart bazar-THANE-BHAYANDER-MAXUS MALL", "city": "Thane", "state": "Maharashtra"}, {"code": "FR16", "name": "smart bazar-VASAI-DATTANI VILLAGE", "city": "Vasai", "state": "Maharashtra"}, {"code": "FR17", "name": "VIRAR-YASHWANT BUILDING", "city": "Virar", "state": "Maharashtra"}], "Kiran": [{"code": "6243", "name": "Super Vidyaranyanpur", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR40", "name": "smart bazar-BENGALURU-ROYAL MEENAKSHI M", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR42", "name": "FB-BENGALURU-SOUL SPACE SPIRIT (CENTRAL)", "city": "Bangalore", "state": "Karnataka"}, {"code": "FR46", "name": "smart bazar-BANGALURU-HEsmart bazarAL-MARUTHI AR", "city": "Bangalore", "state": "Karnataka"}, {"code": "T9UC", "name": "SMT KR Hessarghatta Main Road Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TAJ2", "name": "Smart Kothanur", "city": "Bangalore", "state": "Karnataka"}, {"code": "TEC9", "name": "Smart Akshay Nagar Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TFY4", "name": "Bhartiya City Thanisandra", "city": "Bangalore", "state": "Karnataka"}, {"code": "TMZ6", "name": "Vignannagar", "city": "Bangalore", "state": "Karnataka"}, {"code": "TOD6", "name": "Smart NRI Layout Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TOD7", "name": "Smart HSR Layout Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "TX88", "name": "Monarch Serenity", "city": "Bangalore", "state": "Karnataka"}, {"code": "5616", "name": "Ram Murthy Nagar Bangalore DMa", "city": "Bangalore", "state": "Karnataka"}, {"code": "5621", "name": "KHB Yelahanka Bangalore", "city": "Bangalore", "state": "Karnataka"}, {"code": "5608", "name": "Hennur Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5610", "name": "Kanakpura Road Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5631", "name": "Srigandha Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "6302", "name": "Hosur DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5603", "name": "SJR Sarjapur DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5633", "name": "Hoodi Bangalore DMart", "city": "Bangalore", "state": "Karnataka"}, {"code": "5604", "name": "Garuda Mall DMart", "city": "Bangalore", "state": "Karnataka"}], "Sagar": [{"code": "6239", "name": "Reliance Mall, Dwarka", "city": "Delhi", "state": "Delhi"}, {"code": "TL30", "name": "Vikaspuri", "city": "Delhi", "state": "Delhi"}, {"code": "TP06", "name": "SMART Aggarwal Prestige Mall", "city": "Delhi", "state": "Delhi"}, {"code": "TU21", "name": "G3S Mall Rohini", "city": "Delhi", "state": "Delhi"}, {"code": "TW11", "name": "Plot No. 579, Shivaji Marg, Najafgarh", "city": "Delhi", "state": "Delhi"}, {"code": "FRCS", "name": "smart bazar-NEW DELHI-ORCHARD ROAD MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "FRCW", "name": "FB-NEW DELHI-RAJENDRA PLACE MTRO STATION", "city": "New Delhi", "state": "Delhi"}, {"code": "FRDA", "name": "smart bazar-NEW DELHI-V3S MALL", "city": "New Delhi", "state": "Delhi"}, {"code": "2364", "name": "Jharsa Road", "city": "Gurgaon", "state": "Haryana"}, {"code": "6701", "name": "DLF Mega Mall", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCO", "name": "smart bazar-GURGAON-AMBI MALL", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCP", "name": "smart bazar-GURGAON-OMAXE SOHNA ROAD-ED", "city": "Gurgaon", "state": "Haryana"}, {"code": "FRCQ", "name": "smart bazar-GURGAON-SAHARA MALL", "city": "Gurgaon", "state": "Haryana"}, {"code": "T971", "name": "Smart M3M Urbana Premium", "city": "Gurgaon", "state": "Haryana"}, {"code": "TC74", "name": "Iris Broadway", "city": "Gurgaon", "state": "Haryana"}, {"code": "TIX3", "name": "Aria Mall", "city": "Gurgaon", "state": "Haryana"}], "Subhankar Sengupta": [{"code": "2951", "name": "RRL Super Rosedale", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBT", "name": "smart bazar-KOLKATA-BIRATI", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBU", "name": "smart bazar-KOLKATA-DCN MALL-JESSORE ROAD", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBV", "name": "smart bazar-KOLKATA-HILAND PARK-THE MET", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRBW", "name": "smart bazar-KOLKATA-JADAVPUR-ORBIT MALL", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCA", "name": "smart bazar-KOLKATA-RASHBEHARI AVENUE", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCB", "name": "smart bazar-KOLKATA-SALT LAKE", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCC", "name": "smart bazar-KOLKATA-SEALDAH", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCF", "name": "KOLKATA-V.I.P. ROAD", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRCG", "name": "smart bazar-KOLKATA-WOOD SQUARE MALL-PARGANAS", "city": "Kolkata", "state": "West Bengal"}, {"code": "FRLF", "name": "smart bazar-KOLKATA-KHIDERPOR", "city": "Kolkata", "state": "West Bengal"}, {"code": "T1C1", "name": "SMT WB  Shyamnagar K", "city": "Kolkata", "state": "West Bengal"}, {"code": "T1NA", "name": "Smart South  Planox Mall", "city": "Kolkata", "state": "West Bengal"}, {"code": "T60N", "name": "SMT WB Greenfield C", "city": "Kolkata", "state": "West Bengal"}, {"code": "TH92", "name": "RS Newtown Plaza Kolkata", "city": "Kolkata", "state": "West Bengal"}, {"code": "TIT6", "name": "RRL Smart Ghosh Para Road B", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMM5", "name": "Smart Behala", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMM6", "name": "Smart Garia", "city": "Kolkata", "state": "West Bengal"}, {"code": "TMZ5", "name": "SMART Madhyamgram", "city": "Kolkata", "state": "West Bengal"}, {"code": "TR85", "name": "Oracle Realmark Narendrapur", "city": "Kolkata", "state": "West Bengal"}]};
 
-// ── Init ──────────────────────────────────────────────
+// Photos array — max 4
+let photos = [null, null, null, null]; // {dataURI, fileName} or null
+let stockAvailable = ''; // 'yes' or 'no'
+
+// Init
 const now = new Date();
 document.getElementById('vDate').value = now.toISOString().split('T')[0];
 document.getElementById('vTime').value = now.toTimeString().substring(0,5);
 
-if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(
-    p => {
-      const lat = p.coords.latitude.toFixed(6);
-      const lng = p.coords.longitude.toFixed(6);
-      document.getElementById('vLat').value = lat;
-      document.getElementById('vLng').value = lng;
-      document.getElementById('vLoc').value = lat + ', ' + lng;
-    },
-    () => { document.getElementById('vLoc').value = 'Location unavailable'; }
-  );
-} else {
-  document.getElementById('vLoc').value = 'GPS not supported';
+// GPS — required
+function getGPS() {
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(
+      p => {
+        const lat = p.coords.latitude.toFixed(6), lng = p.coords.longitude.toFixed(6);
+        document.getElementById('vLat').value = lat;
+        document.getElementById('vLng').value = lng;
+        document.getElementById('vLoc').value = lat + ', ' + lng;
+        prog();
+      },
+      err => {
+        document.getElementById('vLoc').value = 'Location unavailable — please enable GPS';
+        prog();
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  } else {
+    document.getElementById('vLoc').value = 'GPS not supported';
+  }
 }
+getGPS();
 
-// ── Merchandiser change ───────────────────────────────
+// Merchandiser change
 function onMerc() {
   const val = document.getElementById('merc').value;
-  document.getElementById('mercOtherField').style.display = val === 'Others' ? 'block' : 'none';
+  const isOther = val === 'Others';
+  document.getElementById('mercOtherField').style.display = isOther ? 'block' : 'none';
+
   const sel = document.getElementById('store');
   sel.innerHTML = '<option value="">Select store</option>';
   document.getElementById('storeCode').value = '';
   document.getElementById('storeOtherField').style.display = 'none';
 
-  if (val && val !== 'Others' && STORES[val]) {
-    // Group by city
+  // Hide city/state fields initially
+  document.getElementById('city').value = '';
+  document.getElementById('state').value = '';
+  document.getElementById('cityStateOther').style.display = isOther ? 'block' : 'none';
+
+  if (!isOther && STORES[val]) {
     const grouped = {};
     STORES[val].forEach(s => {
       if (!grouped[s.city]) grouped[s.city] = [];
@@ -265,129 +338,197 @@ function onMerc() {
       og.label = city;
       stores.forEach(s => {
         const o = document.createElement('option');
-        o.value = s.code + '||' + s.name;
+        o.value = JSON.stringify(s);
         o.textContent = s.name;
         og.appendChild(o);
       });
       sel.appendChild(og);
     });
   }
-  // Always add Others at end
   const oo = document.createElement('option');
-  oo.value = 'OTHERS||Others';
+  oo.value = 'OTHERS';
   oo.textContent = 'Others';
   sel.appendChild(oo);
   prog();
 }
 
-// ── Store change ──────────────────────────────────────
+// Store change
 function onStore() {
   const val = document.getElementById('store').value;
-  if (!val) { document.getElementById('storeCode').value = ''; document.getElementById('storeOtherField').style.display = 'none'; return; }
-  const parts = val.split('||');
-  if (parts[0] === 'OTHERS') {
+  const isOther = val === 'OTHERS';
+  document.getElementById('storeOtherField').style.display = isOther ? 'block' : 'none';
+
+  if (isOther) {
     document.getElementById('storeCode').value = '';
-    document.getElementById('storeOtherField').style.display = 'block';
+    document.getElementById('city').value = '';
+    document.getElementById('state').value = '';
+    document.getElementById('cityStateOther').style.display = 'block';
+  } else if (val) {
+    try {
+      const s = JSON.parse(val);
+      document.getElementById('storeCode').value = s.code;
+      document.getElementById('city').value = s.city;
+      document.getElementById('state').value = s.state;
+      document.getElementById('cityStateOther').style.display = 'none';
+    } catch(e) {}
   } else {
-    document.getElementById('storeCode').value = parts[0];
-    document.getElementById('storeOtherField').style.display = 'none';
+    document.getElementById('storeCode').value = '';
+    document.getElementById('city').value = '';
+    document.getElementById('state').value = '';
   }
   prog();
 }
 
-// ── Visibility change ─────────────────────────────────
+// Stock available
+function setStock(v) {
+  stockAvailable = v;
+  document.getElementById('saYes').className = 'yn-btn' + (v==='yes'?' yes':'');
+  document.getElementById('saNo').className  = 'yn-btn' + (v==='no'?' no':'');
+  document.getElementById('stockVal').value  = v === 'yes' ? 'Yes' : 'No';
+  document.getElementById('sohCard').style.display = v === 'yes' ? 'block' : 'none';
+  // Photo compulsory only if stock available
+  updatePhotoRequirement();
+  prog();
+}
+
+function updatePhotoRequirement() {
+  const sub = document.getElementById('photoSub');
+  const req = document.getElementById('slot0').querySelector('.slot-req');
+  if (stockAvailable === 'yes') {
+    sub.textContent = 'At least 1 photo required · Max 4';
+    if(req) req.style.display = 'block';
+  } else {
+    sub.textContent = 'Optional · Max 4 photos';
+    if(req) req.style.display = 'none';
+  }
+}
+
+// Price Y/N
+function setYN(v) {
+  document.getElementById('pyBtn').className = 'yn-btn' + (v==='yes'?' yes':'');
+  document.getElementById('pnBtn').className = 'yn-btn' + (v==='no'?' no':'');
+  document.getElementById('priceVal').value  = v === 'yes' ? 'Yes' : 'No';
+  prog();
+}
+
+// Visibility
 function onVis() {
   document.getElementById('visOtherField').style.display =
     document.getElementById('vis').value === 'Others' ? 'block' : 'none';
   prog();
 }
 
-// ── Price Y/N ─────────────────────────────────────────
-function setYN(v) {
-  document.getElementById('pyBtn').className = 'yn-btn' + (v === 'yes' ? ' yes' : '');
-  document.getElementById('pnBtn').className = 'yn-btn' + (v === 'no'  ? ' no'  : '');
-  document.getElementById('priceVal').value  = v === 'yes' ? 'Yes' : 'No';
-  prog();
-}
-
-// ── Photo ─────────────────────────────────────────────
-let fileDataURI = '';
-let fileNameStr = '';
-
-function onPhoto(input) {
+// Photos
+function addPhoto(input) {
   const file = input.files[0];
   if (!file) return;
   if (file.size > 10 * 1024 * 1024) { showErr('Photo too large. Max 10MB.'); return; }
+
+  // Find first empty slot
+  const slot = photos.indexOf(null);
+  if (slot === -1) { showErr('Maximum 4 photos already added.'); return; }
+
   const reader = new FileReader();
   reader.onload = e => {
-    fileDataURI = e.target.result;            // full data URI  e.g. "data:image/jpeg;base64,..."
-    fileNameStr = file.name;
-    document.getElementById('photoPreview').src = fileDataURI;
-    document.getElementById('photoPreview').style.display = 'block';
-    document.getElementById('photoName').textContent = '✓ ' + file.name;
-    document.getElementById('photoName').style.display = 'block';
-    document.getElementById('photoArea').classList.add('has-photo');
+    photos[slot] = { dataURI: e.target.result, fileName: file.name };
+    renderPhotoGrid();
     prog();
   };
   reader.readAsDataURL(file);
+  input.value = ''; // reset so same file can be re-selected
 }
 
-// ── Progress bar ──────────────────────────────────────
+function removePhoto(slot) {
+  photos[slot] = null;
+  // Compact — shift photos left
+  const compact = photos.filter(p => p !== null);
+  photos = [...compact, ...Array(4 - compact.length).fill(null)];
+  renderPhotoGrid();
+  prog();
+}
+
+function renderPhotoGrid() {
+  const count = photos.filter(p => p !== null).length;
+  document.getElementById('photoCount').textContent = count + ' / 4 photos added';
+
+  for (let i = 0; i < 4; i++) {
+    const slot = document.getElementById('slot' + i);
+    if (photos[i]) {
+      slot.innerHTML = \`<img src="\${photos[i].dataURI}" alt="Photo \${i+1}"><button class="remove-btn" onclick="removePhoto(\${i})">✕</button>\`;
+      slot.classList.add('filled');
+      slot.classList.remove('required-empty');
+      slot.onclick = null;
+    } else {
+      const isReq = i === 0 && stockAvailable === 'yes';
+      slot.innerHTML = \`<div class="slot-icon">➕</div><div class="slot-lbl">Photo \${i+1}</div>\${isReq ? '<div class="slot-req">Required</div>' : ''}\`;
+      slot.className = 'photo-slot';
+      slot.onclick = () => document.getElementById('photoInputCam').click();
+    }
+  }
+}
+
+// Progress
 function prog() {
-  let n = 0;
-  if (document.getElementById('merc').value)  n++;
+  let n = 0, total = 6;
+  if (document.getElementById('merc').value) n++;
   if (document.getElementById('store').value) n++;
+  if (document.getElementById('stockVal').value) n++;
   if (document.getElementById('priceVal').value) n++;
-  if (document.getElementById('vis').value)   n++;
-  if (fileDataURI) n++;
-  document.getElementById('prog').style.width = Math.round(n / 5 * 100) + '%';
+  if (document.getElementById('vis').value) n++;
+  if (document.getElementById('compliance').value) n++;
+  document.getElementById('prog').style.width = Math.round(n / total * 100) + '%';
 }
 
-// ── Helpers ───────────────────────────────────────────
-function gv(id) { return (document.getElementById(id) || {}).value || ''; }
-function gn(id) { return parseInt(gv(id)) || 0; }
+function gv(id) { return (document.getElementById(id)||{}).value||''; }
+function gn(id) { return parseInt(gv(id))||0; }
 function showErr(msg) {
   const b = document.getElementById('err');
   b.textContent = msg; b.classList.add('show');
-  b.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  b.scrollIntoView({behavior:'smooth',block:'center'});
   setTimeout(() => b.classList.remove('show'), 5000);
 }
 
-// ── Submit ────────────────────────────────────────────
 function doSubmit() {
-  const mercSel   = gv('merc');
-  const mercFinal = mercSel === 'Others' ? gv('mercOther').trim() : mercSel;
-  const storeVal  = gv('store');
-  const visSel    = gv('vis');
-  const visFinal  = visSel === 'Others' ? gv('visOther').trim() : visSel;
+  const merc = gv('merc');
+  const mercFinal = merc === 'Others' ? gv('mercOther').trim() : merc;
+  const storeVal = gv('store');
+  const visSel = gv('vis');
+  const visFinal = visSel === 'Others' ? gv('visOther').trim() : visSel;
+  const isOtherStore = storeVal === 'OTHERS';
+  const isOtherMerc = merc === 'Others';
+  const cityFinal = isOtherStore || isOtherMerc ? gv('cityOther').trim() : gv('city');
+  const stateFinal = isOtherStore || isOtherMerc ? gv('stateOther').trim() : gv('state');
+  const photoCount = photos.filter(p => p !== null).length;
 
-  if (!mercFinal)        { showErr('Please select or enter your name.');        return; }
-  if (!storeVal)         { showErr('Please select a store.');                   return; }
-  if (!gv('priceVal'))   { showErr('Please indicate if price is correct.');     return; }
-  if (!fileDataURI)      { showErr('Please upload a proof photo.');             return; }
-  if (!visFinal)         { showErr('Please select shelf visibility.');          return; }
+  if (!gv('vLat') || !gv('vLng')) { showErr('GPS location is required. Please enable location and wait for it to load.'); return; }
+  if (!mercFinal)              { showErr('Please select or enter your name.'); return; }
+  if (!storeVal)               { showErr('Please select a store.'); return; }
+  if (!gv('stockVal'))         { showErr('Please indicate if stock is available.'); return; }
+  if (!gv('priceVal'))         { showErr('Please indicate if price is correct.'); return; }
+  if (stockAvailable === 'yes' && photoCount === 0) { showErr('At least 1 photo is required when stock is available.'); return; }
+  if (!visFinal)               { showErr('Please select shelf visibility.'); return; }
+  if (!gv('compliance'))       { showErr('Please select compliance level.'); return; }
 
-  const storeParts = storeVal.split('||');
-  const storeCode  = storeParts[0] === 'OTHERS' ? 'OTHER' : storeParts[0];
-  const storeName  = storeParts[0] === 'OTHERS' ? (gv('storeOther') || 'Others') : storeParts[1];
+  let storeName, storeCode;
+  if (isOtherStore) { storeName = gv('storeOther') || 'Others'; storeCode = 'OTHER'; }
+  else { try { const s = JSON.parse(storeVal); storeName = s.name; storeCode = s.code; } catch(e) { storeName = storeVal; storeCode = ''; } }
 
   const payload = {
-    date:         gv('vDate'),
-    time:         gv('vTime') || new Date().toTimeString().substring(0, 5),
-    lat:          gv('vLat'),
-    lng:          gv('vLng'),
+    date: gv('vDate'),
+    time: gv('vTime') || new Date().toTimeString().substring(0,5),
+    lat: gv('vLat'), lng: gv('vLng'),
     merchandiser: mercFinal,
-    storeName,
-    storeCode,
-    soh_digestive: gn('soh1'),
-    soh_jeera:     gn('soh2'),
-    soh_choco:     gn('soh3'),
-    soh_assorted:  gn('soh4'),
-    priceCorrect:  gv('priceVal'),
-    fileData:      fileDataURI,   // full data URI — Apps Script splits this
-    fileName:      fileNameStr,
-    visibility:    visFinal,
-    remarks:       gv('remarks')
+    storeName, storeCode,
+    city: cityFinal, state: stateFinal,
+    stockAvailable: gv('stockVal'),
+    soh_digestive: gn('soh1'), soh_jeera: gn('soh2'),
+    soh_choco: gn('soh3'), soh_assorted: gn('soh4'),
+    priceCorrect: gv('priceVal'),
+    // Photos — send as array
+    photos: photos.filter(p=>p!==null).map(p=>({fileData: p.dataURI, fileName: p.fileName})),
+    visibility: visFinal,
+    compliance: gv('compliance'),
+    remarks: gv('remarks')
   };
 
   document.getElementById('overlay').classList.add('show');
@@ -398,52 +539,54 @@ function doSubmit() {
     .then(d => {
       document.getElementById('overlay').classList.remove('show');
       if (d.status === 'success') {
-        document.getElementById('form').style.display    = 'none';
+        document.getElementById('form').style.display = 'none';
         document.getElementById('success').style.display = 'block';
         document.querySelector('.submit-bar').style.display = 'none';
-        document.getElementById('okMsg').textContent =
-          'SOH for ' + storeName + ' saved. ID: ' + (d.id || '—');
+        document.getElementById('okMsg').textContent = 'SOH for ' + storeName + ' saved. ID: ' + (d.id||'—');
       } else {
         document.getElementById('subBtn').disabled = false;
-        showErr('Error: ' + (d.message || 'Unknown error. Try again.'));
+        showErr('Error: ' + (d.message||'Unknown error. Try again.'));
       }
     })
-    .catch(err => {
+    .catch(() => {
       document.getElementById('overlay').classList.remove('show');
       document.getElementById('subBtn').disabled = false;
       showErr('Network error. Check your connection and try again.');
     });
 }
 
-// ── Reset ─────────────────────────────────────────────
 function reset() {
-  document.getElementById('form').style.display    = 'block';
+  document.getElementById('form').style.display = 'block';
   document.getElementById('success').style.display = 'none';
   document.querySelector('.submit-bar').style.display = 'block';
   document.getElementById('subBtn').disabled = false;
-
-  // Clear all inputs
   document.querySelectorAll('input:not([readonly]):not([type=hidden])').forEach(el => el.value = '');
   document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
   document.getElementById('storeCode').value = '';
-  document.getElementById('priceVal').value  = '';
-  document.getElementById('mercOtherField').style.display  = 'none';
+  document.getElementById('city').value = '';
+  document.getElementById('state').value = '';
+  document.getElementById('priceVal').value = '';
+  document.getElementById('stockVal').value = '';
+  document.getElementById('mercOtherField').style.display = 'none';
   document.getElementById('storeOtherField').style.display = 'none';
-  document.getElementById('visOtherField').style.display   = 'none';
+  document.getElementById('visOtherField').style.display = 'none';
+  document.getElementById('cityStateOther').style.display = 'none';
+  document.getElementById('sohCard').style.display = 'none';
   document.getElementById('store').innerHTML = '<option value="">Select merchandiser first</option>';
   document.getElementById('pyBtn').className = 'yn-btn';
   document.getElementById('pnBtn').className = 'yn-btn';
-  document.getElementById('photoPreview').style.display = 'none';
-  document.getElementById('photoName').style.display    = 'none';
-  document.getElementById('photoArea').classList.remove('has-photo');
-  fileDataURI = ''; fileNameStr = '';
+  document.getElementById('saYes').className = 'yn-btn';
+  document.getElementById('saNo').className = 'yn-btn';
   document.getElementById('err').classList.remove('show');
-
+  photos = [null, null, null, null];
+  stockAvailable = '';
+  renderPhotoGrid();
   const n = new Date();
   document.getElementById('vDate').value = n.toISOString().split('T')[0];
-  document.getElementById('vTime').value = n.toTimeString().substring(0, 5);
+  document.getElementById('vTime').value = n.toTimeString().substring(0,5);
   document.getElementById('prog').style.width = '0%';
-  window.scrollTo(0, 0);
+  window.scrollTo(0,0);
+  getGPS();
 }
 </script>
 </body>
