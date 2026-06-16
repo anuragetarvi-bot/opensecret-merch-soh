@@ -420,19 +420,18 @@ function doSubmit() {
   document.getElementById('ov').className = 'ov on';
   document.getElementById('subBtn').disabled = true;
 
-  fetch(URL, { method:'POST', body: JSON.stringify(payload) })
-    .then(function(r){ return r.json(); })
-    .then(function(d){
+  fetch(URL, {
+    method: 'POST',
+    body: JSON.stringify(payload),
+    mode: 'no-cors'
+  })
+    .then(function(){
+      // no-cors returns opaque response — assume success if no error
       document.getElementById('ov').className = 'ov';
-      if (d.status === 'success') {
-        document.getElementById('frm').style.display = 'none';
-        document.querySelector('.footer').style.display = 'none';
-        document.getElementById('suc').style.display = 'block';
-        document.getElementById('sm').textContent = 'Saved for ' + sn + '. ID: ' + (d.id||'—');
-      } else {
-        document.getElementById('subBtn').disabled = false;
-        showErr('Error: ' + (d.message||'Try again.'));
-      }
+      document.getElementById('frm').style.display = 'none';
+      document.querySelector('.footer').style.display = 'none';
+      document.getElementById('suc').style.display = 'block';
+      document.getElementById('sm').textContent = 'Saved for ' + sn + '. Check your Google Sheet to confirm.';
     })
     .catch(function(){
       document.getElementById('ov').className = 'ov';
