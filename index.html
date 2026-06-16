@@ -278,7 +278,7 @@ header p{font-size:12px;color:rgba(255,255,255,0.65);margin-top:2px;}
   </div>
 </div>
 
-<div class="footer"><button class="sub-btn" id="subBtn">Submit SOH Entry →</button></div>
+<div class="footer"><button class="sub-btn" id="subBtn" onclick="doSubmit()">Submit SOH Entry →</button></div>
 
 <script>
 var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxA0XXOS25-DeHMFldoHo2A--AAasrwkP_Art_g9Z_J18D5MJwMKZ6x3qbQ_y2aMmza-w/exec';
@@ -293,6 +293,11 @@ window.addEventListener('load', function() {
   setDateTime();
   doGPS();
   renderPhotoGrid();
+  // Attach submit button
+  var btn = document.getElementById('subBtn');
+  if (btn) {
+    btn.addEventListener('click', function() { doSubmit(); });
+  }
 });
 
 function setDateTime() {
@@ -661,10 +666,6 @@ function doReset() {
   setDateTime();
   doGPS();
 }
-  // Attach submit button listener
-  document.getElementById('subBtn').addEventListener('click', function() {
-    doSubmit();
-  });
 </script>
 </body>
 </html>
